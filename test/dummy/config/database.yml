@@ -1,0 +1,15 @@
+development:
+  primary:
+    url: <%= ENV['DEV_PRIMARY_DATABASE_URL'] || 'sqlite3:db/development_primary.sqlite3' %>
+
+  secondary:
+    url: <%= ENV['DEV_SECONDARY_DATABASE_URL'] || 'sqlite3:db/development_secondary.sqlite3' %>
+    migrations_paths: <%= Rails.root.join('db/secondary_migrate') %>
+
+test:
+  primary:
+    url: <%= ENV['TEST_PRIMARY_DATABASE_URL'] || 'sqlite3:db/test_primary.sqlite3' %>
+
+  secondary:
+    url: <%= ENV['TEST_SECONDARY_DATABASE_URL'] || 'sqlite3:db/test_secondary.sqlite3' %>
+    migrations_paths: <%= Rails.root.join('db/secondary_migrate') %>

@@ -1,0 +1,46 @@
+# == Schema Information
+#
+# Table name: passengers
+#
+#  id              :integer          not null, primary key
+#  first_name      :string
+#  gender          :string           default("not_sure")
+#  last_name       :string
+#  nationality     :string
+#  passport_number :string
+#  religion        :string           default("scientology")
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+john_doe:
+  first_name: John
+  last_name: Doe
+  gender: male
+  nationality: American
+  passport_number: X1234567
+  religion: Christianity
+
+jane_smith:
+  first_name: Jane
+  last_name: Smith
+  gender: female
+  nationality: British
+  passport_number: B9876543
+  religion: Atheism
+
+xenu_follower:
+  first_name: Xenu
+  last_name: Follower
+  gender: not_sure
+  nationality: Intergalactic
+  passport_number: GALAXY123
+  religion: scientology
+
+olga_ivanova:
+  first_name: Olga
+  last_name: Ivanova
+  gender: female
+  nationality: Russian
+  passport_number: RU3456789
+  religion: Eastern Orthodox
+

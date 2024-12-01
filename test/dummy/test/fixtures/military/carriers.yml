@@ -1,0 +1,61 @@
+# == Schema Information
+#
+# Table name: military_carriers
+#
+#  id         :integer          not null, primary key
+#  capacity   :integer
+#  model      :string
+#  name       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+uss_enterprise:
+  id: 1
+  name: USS Enterprise
+  model: NCC-1701
+  capacity: 1000
+
+uss_voyager:
+  id: 2
+  name: USS Voyager
+  model: NCC-74656
+  capacity: 150
+
+uss_defiant:
+  id: 3
+  name: USS Defiant
+  model: NX-74205
+  capacity: 50
+
+
+uss_excalibur:
+  id: 4
+  name: USS Excalibur
+  model: NCC-1664
+  capacity: 800
+
+uss_yamato:
+  id: 5
+  name: USS Yamato
+  model: NCC-71807
+  capacity: 950
+
+uss_prometheus:
+  id: 6
+  name: USS Prometheus
+  model: NX-59650
+  capacity: 200
+
+uss_intrepid:
+  id: 7
+  name: USS Intrepid
+  model: NCC-74600
+  capacity: 750
+
+uss_horizon:
+  id: 8
+  name: USS Horizon
+  model: NX-04
+  capacity: 100
+

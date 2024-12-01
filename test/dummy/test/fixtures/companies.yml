@@ -1,0 +1,41 @@
+# == Schema Information
+#
+# Table name: companies
+#
+#  id           :integer          not null, primary key
+#  ceo_name     :string
+#  founded_year :integer
+#  industry     :string
+#  name         :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+umbrella_corp:
+  name: Umbrella Corporation
+  ceo_name: Albert Wesker
+  founded_year: 1968
+  industry: Biotechnology
+
+weyland_yutani:
+  name: Weyland-Yutani Corporation
+  ceo_name: Peter Weyland
+  founded_year: 2099
+  industry: Aerospace and Biotechnology
+
+tyrell_corp:
+  name: Tyrell Corporation
+  ceo_name: Eldon Tyrell
+  founded_year: 2016
+  industry: Robotics and Artificial Intelligence
+
+cyberdyne_systems:
+  name: Cyberdyne Systems
+  ceo_name: Miles Dyson
+  founded_year: 1997
+  industry: Technology and Defense
+
+ftx:
+  name: FTX
+  ceo_name: Sam Bankman-Fried
+  founded_year: 2017
+  industry: Cryptocurrency
