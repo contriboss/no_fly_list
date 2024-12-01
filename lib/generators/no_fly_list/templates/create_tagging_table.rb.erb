@@ -1,0 +1,20 @@
+class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :<%= tag_table_name %>, id: :bigint do |t|
+      t.string :name, null: false
+      t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
+    end
+
+    create_table :<%= tagging_table_name %> do |t|
+      t.column :taggable_id, :bigint, null: false, index: true # Change to :uuid if you are using UUIDs
+      t.column :tag_id, :bigint, null: false, index: true
+      t.string :context, null: false
+      t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
+    end
+
+    add_index :<%= tag_table_name %>, :name, unique: true
+    add_index :<%= tagging_table_name %>, %i[taggable_id tag_id], unique: true
+    add_foreign_key :<%= tagging_table_name %>, :<%= tag_table_name %>, column: :tag_id
+    add_foreign_key :<%= tagging_table_name %>, :<%= model_table_name %>, column: :taggable_id
+  end
+end

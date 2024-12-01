@@ -1,0 +1,41 @@
+# == Schema Information
+#
+# Table name: people
+#
+#  id         :integer          not null, primary key
+#  address    :text
+#  birthdate  :date
+#  email      :string
+#  first_name :string
+#  last_name  :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+john_doe:
+  first_name: John
+  last_name: Doe
+  email: john.doe@example.com
+  address: 123 Elm Street, Springfield, USA
+  birthdate: 1985-06-15
+
+jane_smith:
+  first_name: Jane
+  last_name: Smith
+  email: jane.smith@example.com
+  address: 456 Oak Avenue, Metropolis, USA
+  birthdate: 1990-09-20
+
+alice_wonderland:
+  first_name: Alice
+  last_name: Wonderland
+  email: alice@wonderland.example.com
+  address: Tea Party Road, Wonderland
+  birthdate: 2000-03-25
+
+bruce_wayne:
+  first_name: Bruce
+  last_name: Wayne
+  email: bruce.wayne@wayneenterprises.com
+  address: Wayne Manor, Gotham City
+  birthdate: 1975-02-19
+

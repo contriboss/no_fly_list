@@ -1,0 +1,41 @@
+# == Schema Information
+#
+# Table name: trucks
+#
+#  id            :integer          not null, primary key
+#  capacity_tons :integer
+#  driver_name   :string
+#  make          :string
+#  model         :string
+#  year          :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+big_hauler:
+  capacity_tons: 20
+  driver_name: Jake Long
+  make: Peterbilt
+  model: 579
+  year: 2018
+
+mighty_mover:
+  capacity_tons: 15
+  driver_name: Sarah Connor
+  make: Volvo
+  model: FH16
+  year: 2021
+
+heavy_duty:
+  capacity_tons: 30
+  driver_name: Tony Stark
+  make: Mack
+  model: Granite
+  year: 2019
+
+eco_freight:
+  capacity_tons: 10
+  driver_name: Ellen Ripley
+  make: Tesla
+  model: Semi
+  year: 2023
+

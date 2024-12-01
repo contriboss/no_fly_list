@@ -1,0 +1,9 @@
+<% module_namespacing do -%>
+class <%= taggable_klass %>Tag < <%= model_abstract_class_name %>
+  self.table_name = '<%="#{model_class.table_name.singularize}_tags" %>'
+
+  has_many :taggings, class_name: '<%= tagging_class_name %>', dependent: :destroy
+  has_many :taggables, through: :taggings, source: :taggable, source_type: '<%= taggable_klass %>'
+  include NoFlyList::TagRecord
+end
+<% end -%>

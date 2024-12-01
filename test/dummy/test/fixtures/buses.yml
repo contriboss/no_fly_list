@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: buses
+#
+#  id           :integer          not null, primary key
+#  accessible   :boolean
+#  capacity     :integer
+#  company      :string
+#  route_number :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+city_express:
+  accessible: true
+  capacity: 50
+  company: City Express
+  route_number: 42
+
+metro_transit:
+  accessible: false
+  capacity: 30
+  company: Metro Transit
+  route_number: 15A
+
+intercity_coach:
+  accessible: true
+  capacity: 60
+  company: InterCity Coach
+  route_number: IC-102
+

@@ -1,0 +1,19 @@
+vegan:
+  id: 1
+  name: vegan
+
+vegetarian:
+  id: 2
+  name: vegetarian
+
+gluten_free:
+  id: 3
+  name: gluten_free
+
+kosher:
+  id: 4
+  name: kosher
+
+halal:
+  id: 5
+  name: halal

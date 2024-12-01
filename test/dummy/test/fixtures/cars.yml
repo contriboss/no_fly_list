@@ -1,0 +1,33 @@
+# == Schema Information
+#
+# Table name: cars
+#
+#  id          :integer          not null, primary key
+#  color       :string
+#  make        :string
+#  model       :string
+#  price_cents :integer
+#  year        :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+tesla:
+  color: Red
+  make: Tesla
+  model: Model S
+  price_cents: 7999999
+  year: 2023
+
+jaguar:
+  color: Pink
+  make: Jaguar
+  model: Type 00
+  price_cents: 15499999
+  year: 2025
+
+lada:
+  color: White
+  make: Lada
+  model: Niva
+  price_cents: 999999
+  year: 2021
