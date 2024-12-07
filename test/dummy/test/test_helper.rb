@@ -11,3 +11,7 @@ Shoulda::Matchers.configure do |config|
     with.library :active_record
   end
 end
+
+
+puts "Rails version: #{Rails.version}"
+puts "Ruby version: #{RUBY_VERSION}"
