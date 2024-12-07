@@ -12,6 +12,5 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-
 puts "Rails version: #{Rails.version}"
 puts "Ruby version: #{RUBY_VERSION}"

@@ -2,6 +2,7 @@
 
 require_relative 'mutation'
 require_relative 'query'
+require_relative 'tag_setup'
 
 module NoFlyList
   module TaggableRecord
@@ -19,16 +20,7 @@ module NoFlyList
       end
 
       def build_tag_setup(taggable_klass, context, options)
-        OpenStruct.new(
-          taggable_klass: taggable_klass,
-          context: context,
-          transformer: options.fetch(:transformer, ApplicationTagTransformer),
-          global: options.fetch(:global, false),
-          restrict_to_existing: options.fetch(:restrict_to_existing, false),
-          limit: options.fetch(:limit, nil),
-          tag_class_name: determine_tag_class_name(taggable_klass, options),
-          tagging_class_name: determine_tagging_class_name(taggable_klass, options)
-        )
+        TagSetup.new(taggable_klass, context, options)
       end
 
       def determine_tag_class_name(taggable_klass, options)

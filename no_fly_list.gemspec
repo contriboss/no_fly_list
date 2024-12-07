@@ -19,5 +19,4 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/contriboss/no_fly_list'
 
   spec.add_dependency 'activerecord', '>= 7.2'
-  spec.add_dependency 'ostruct'
 end

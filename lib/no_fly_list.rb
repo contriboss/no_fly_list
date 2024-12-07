@@ -6,7 +6,6 @@ require 'active_support/rails'
 require 'active_support/core_ext/numeric/time'
 require_relative 'no_fly_list/version'
 require 'no_fly_list/railtie' if defined?(Rails)
-require 'ostruct'
 
 module NoFlyList
   extend ActiveSupport::Autoload
