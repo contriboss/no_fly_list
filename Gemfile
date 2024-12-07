@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'pg'
-rails_version = ENV.fetch('RAILS_VERSION', '~> 8.0')
+rails_version = ENV.fetch('RAILS_VERSION', '~> 7.2')
 gem 'railties', rails_version
 gem 'shoulda-context'
 gem 'shoulda-matchers'

@@ -157,13 +157,35 @@ article.topic_list  # => ["rails", "api"]
 ### Querying
 
 ```ruby
-# Find records with specific tags
-Article.tagged_with("rails")
+# Find records with any of the specified topic tags
+Article.with_any_topics(["rails", "api"])
 
-# Complex queries
-Article.tagged_with(["rails", "api"], match: :any)
-Article.tagged_with(["rails", "api"], match: :all)
+# Find records with all specified topic tags
+Article.with_all_topics(["rails", "api"])
+
+# Find records without any topic tags
+Article.without_topics
+
+# Find records without specific topic tags
+Article.without_any_topics(["rails", "api"])
+
+# Find records with exactly these topic tags (no more, no less)
+Article.with_exact_topics(["rails", "api"])
+
+# Get records with tag counts
+Article.topics_count
 ```
+
+Query methods are automatically created for each tag context. Replace `topics` in the examples above with your tag context name.
+
+Options available for each query type:
+
+- `with_any_[context]`: Finds records that have any of the specified tags
+- `with_all_[context]`: Finds records that have all of the specified tags
+- `without_[context]`: Finds records that have no tags in this context
+- `without_any_[context]`: Finds records that don't have any of the specified tags
+- `with_exact_[context]`: Finds records that have exactly these tags (no more, no less)
+- `[context]_count`: Returns records with their tag counts
 
 ## Versioning and Compatibility
 

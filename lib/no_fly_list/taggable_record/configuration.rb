@@ -114,7 +114,7 @@ module NoFlyList
                           self.class.const_get("#{self.class.name}Tag")
                         end
 
-            proxy = NoFlyList::TaggingProxy.new(
+            proxy = TaggingProxy.new(
               self,
               tag_model,
               setup.context,
