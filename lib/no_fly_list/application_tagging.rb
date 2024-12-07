@@ -15,6 +15,7 @@ module NoFlyList
 
     included do
       self.table_name = Rails.configuration.no_fly_list.application_tagging_table_name || 'application_taggings'
+
       belongs_to :tag, class_name: 'ApplicationTag', foreign_key: 'tag_id'
       belongs_to :taggable, polymorphic: true
     end
