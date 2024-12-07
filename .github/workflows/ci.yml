@@ -30,6 +30,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+      - name: DB setup
+        run: bin/setup
       - name: Run test
         run: bin/rails test
 
