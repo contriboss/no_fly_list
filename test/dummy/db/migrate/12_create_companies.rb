@@ -8,7 +8,8 @@ class CreateCompanies < ActiveRecord::Migration[7.2]
       t.integer :founded_year
       t.string :ceo_name
 
-      t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
+      t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
+      t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
     end
   end
 end

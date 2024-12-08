@@ -2,10 +2,10 @@
 #
 # Table name: cars
 #
-#  id          :integer          not null, primary key
-#  color       :string
-#  make        :string
-#  model       :string
+#  id          :bigint           not null, primary key
+#  color       :string(255)
+#  make        :string(255)
+#  model       :string(255)
 #  price_cents :integer
 #  year        :integer
 #  created_at  :datetime         not null

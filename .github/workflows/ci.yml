@@ -19,10 +19,10 @@ jobs:
     services:
       postgres:
         image: 'postgres:16'
-        ports: ['5432:5432']
+        ports: ['5439:5432']
         env:
-          POSTGRES_USER: ubuntu
-          POSTGRES_PASSWORD: ubuntu
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: db_test
         options: >-
           --health-cmd pg_isready
@@ -32,10 +32,11 @@ jobs:
 
       mysql:
         image: 'mysql:8.0'
-        ports: ['3306:3306']
+        ports: ['3309:3306']
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: db_test
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
         options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
@@ -48,7 +49,5 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Database Setup
-        run: bin/setup
-      - name: Execute Tests
-        run: bin/rails test
+      - name: Run all test
+        run: make test_all
