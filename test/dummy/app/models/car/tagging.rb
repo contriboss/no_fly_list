@@ -4,8 +4,8 @@
 #
 # Table name: car_taggings
 #
-#  id          :integer          not null, primary key
-#  context     :string           not null
+#  id          :bigint           not null, primary key
+#  context     :string(255)      not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  tag_id      :bigint           not null
@@ -19,8 +19,8 @@
 #
 # Foreign Keys
 #
-#  tag_id       (tag_id => car_tags.id)
-#  taggable_id  (taggable_id => cars.id)
+#  fk_rails_...  (tag_id => car_tags.id)
+#  fk_rails_...  (taggable_id => cars.id)
 #
 class Car::Tagging < SecondaryRecord
   belongs_to :taggable, class_name: 'Car', foreign_key: 'taggable_id'

@@ -4,11 +4,11 @@
 #
 # Table name: trucks
 #
-#  id            :integer          not null, primary key
+#  id            :bigint           not null, primary key
 #  capacity_tons :integer
-#  driver_name   :string
-#  make          :string
-#  model         :string
+#  driver_name   :string(255)
+#  make          :string(255)
+#  model         :string(255)
 #  year          :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

@@ -12,5 +12,23 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+# test/test_helper.rb or similar
+module ActiveSupport
+  class TestCase
+    # Normalize SQL for test comparisons
+    def normalize_sql(sql)
+      sql.gsub(/\s+/, ' ')          # Collapse multiple spaces into one
+         .gsub('( ', '(')           # Remove space after opening parenthesis
+         .gsub(' )', ')')           # Remove space before closing parenthesis
+         .strip                     # Trim leading and trailing whitespace
+    end
+
+    # Return symbol for the model adapter
+    def model_adapter(model)
+      model.connection.adapter_name.downcase.to_sym
+    end
+  end
+end
+puts "Using #{ENV['DB_ADAPTER']} adapter" if ENV['DB_ADAPTER']
 puts "Rails version: #{Rails.version}"
 puts "Ruby version: #{RUBY_VERSION}"

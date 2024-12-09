@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+      POSTGRES_DB: no_fly_list_test
+      POSTGRES_PASSWORD: password
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 3309:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: no_fly_list_test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password

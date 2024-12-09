@@ -14,7 +14,7 @@ A modern, modular tagging system built specifically for Rails 7.2+ applications.
 
 - **Modern Rails First**: Built specifically for Rails 7.2+, leveraging the latest Active Record features
 - **Flexible Tag Contexts**: Define multiple tag categories per model
-- **Global or Local Tags**: Choose between shared tags across models or model-specific tags
+- **Polymorphic or model owned Tags**: Choose between shared tags across models or model-specific tags
 - **Tag Restrictions**: Optional limiting of allowed tags and maximum tag count
 - **Custom Class Names**: Override tag and tagging class names per model
 
@@ -118,7 +118,7 @@ class Article < ApplicationRecord
   
   # With options
   has_tags :skills, 
-    global: true,                    # Use global tags table
+    polymorphic: true,                    # Use global tags table
     restrict_to_existing: true,      # Only allow existing tags
     limit: 5,                        # Maximum 5 tags per record
     tag_class_name: "CustomTag",     # Custom tag class
@@ -128,13 +128,13 @@ end
 
 ### Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `global` | `false` | When true, uses a shared tags table across all models |
-| `restrict_to_existing` | `false` | When true, only allows using tags that already exist |
-| `limit` | `nil` | Sets maximum number of tags allowed per record |
-| `tag_class_name` | `"Tag"` | Overrides the tag class name for this model |
-| `tagging_class_name` | `"Tagging"` | Overrides the tagging class name for this model |
+| Option | Default | Description                                                |
+|--------|---------|------------------------------------------------------------|
+| `polymorphic` | `false` | When true, uses a shared tags table across multiple models |
+| `restrict_to_existing` | `false` | When true, only allows using tags that already exist       |
+| `limit` | `nil` | Sets maximum number of tags allowed per record             |
+| `tag_class_name` | `"Tag"` | Overrides the tag class name for this model                |
+| `tagging_class_name` | `"Tagging"` | Overrides the tagging class name for this model            |
 
 ### Tagging Operations
 

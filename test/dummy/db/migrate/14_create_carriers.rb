@@ -7,7 +7,8 @@ class CreateCarriers < ActiveRecord::Migration[7.2]
       t.string :model
       t.integer :capacity
 
-      t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
+      t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
+      t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
     end
 
     create_table :military_carrier_tags do |t|

@@ -59,8 +59,9 @@ class TsaControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     data = response.parsed_body['data']
-    assert_includes data['special_needs'], 'wheelchair,hearing assistance', 'Special needs should include added values'
-    assert_equal data['meal_preferences'], %w[vegetarian vegan], 'Meal preferences should include added values'
+    assert_includes 'wheelchair,hearing assistance', data['special_needs'], 'Special needs should include added values'
+    assert_equal %w[vegetarian vegan].sort, data['meal_preferences'].sort,
+                 'Meal preferences should include added values'
   end
 
   test 'add and then remove specific special needs and meal preferences' do

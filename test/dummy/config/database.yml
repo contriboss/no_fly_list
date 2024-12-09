@@ -1,15 +1,43 @@
 development:
   primary:
-    url: <%= ENV['DEV_PRIMARY_DATABASE_URL'] || 'sqlite3:db/development_primary.sqlite3' %>
+    url: <%= case ENV['DB_ADAPTER']
+      when 'mysql'
+      ENV['DEV_PRIMARY_DATABASE_URL'] || 'mysql2://root:root@127.1:3309/development_primary'
+      when 'postgresql'
+      ENV['DEV_PRIMARY_DATABASE_URL'] || 'postgresql://postgres:password@localhost:5439/development_primary'
+      else
+      ENV['DEV_PRIMARY_DATABASE_URL'] || 'sqlite3:db/development_primary.sqlite3'
+      end %>
 
   secondary:
-    url: <%= ENV['DEV_SECONDARY_DATABASE_URL'] || 'sqlite3:db/development_secondary.sqlite3' %>
+    url: <%= case ENV['DB_ADAPTER']
+      when 'mysql'
+      ENV['DEV_SECONDARY_DATABASE_URL'] || 'mysql2://root:root@127.1:3309/development_secondary'
+      when 'postgresql'
+      ENV['DEV_SECONDARY_DATABASE_URL'] || 'postgresql://postgres:password@localhost:5439/development_secondary'
+      else
+      ENV['DEV_SECONDARY_DATABASE_URL'] || 'sqlite3:db/development_secondary.sqlite3'
+      end %>
     migrations_paths: <%= Rails.root.join('db/secondary_migrate') %>
 
 test:
   primary:
-    url: <%= ENV['TEST_PRIMARY_DATABASE_URL'] || 'sqlite3:db/test_primary.sqlite3' %>
+    url: <%= case ENV['DB_ADAPTER']
+      when 'mysql'
+      ENV['TEST_PRIMARY_DATABASE_URL'] || 'mysql2://root:root@127.1:3309/test_primary'
+      when 'postgresql'
+      ENV['TEST_PRIMARY_DATABASE_URL'] || 'postgresql://postgres:password@localhost:5439/test_primary'
+      else
+      ENV['TEST_PRIMARY_DATABASE_URL'] || 'sqlite3:db/test_primary.sqlite3'
+      end %>
 
   secondary:
-    url: <%= ENV['TEST_SECONDARY_DATABASE_URL'] || 'sqlite3:db/test_secondary.sqlite3' %>
+    url: <%= case ENV['DB_ADAPTER']
+      when 'mysql'
+      ENV['TEST_SECONDARY_DATABASE_URL'] || 'mysql2://root:root@127.1:3309/test_secondary'
+      when 'postgresql'
+      ENV['TEST_SECONDARY_DATABASE_URL'] || 'postgresql://postgres:password@localhost:5439/test_secondary'
+      else
+      ENV['TEST_SECONDARY_DATABASE_URL'] || 'sqlite3:db/test_secondary.sqlite3'
+      end %>
     migrations_paths: <%= Rails.root.join('db/secondary_migrate') %>

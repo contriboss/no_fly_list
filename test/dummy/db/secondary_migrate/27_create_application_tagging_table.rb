@@ -1,4 +1,6 @@
-class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version %>
+# frozen_string_literal: true
+
+class CreateApplicationTaggingTable < ActiveRecord::Migration[7.2]
   def up
     create_table :application_tags do |t|
       t.string :name, null: false, index: { unique: true }
@@ -14,7 +16,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
       t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
 
       # Add index for uniqueness and performance
-      t.index [:taggable_type, :taggable_id, :context, :tag_id],
+      t.index %i[taggable_type taggable_id context tag_id],
               unique: true,
               name: 'index_app_taggings_uniqueness'
 

@@ -4,10 +4,10 @@
 #
 # Table name: military_carriers
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  capacity   :integer
-#  model      :string
-#  name       :string
+#  model      :string(255)
+#  name       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

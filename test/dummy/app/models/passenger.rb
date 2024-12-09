@@ -4,13 +4,13 @@
 #
 # Table name: passengers
 #
-#  id              :integer          not null, primary key
-#  first_name      :string
-#  gender          :string           default("not_sure")
-#  last_name       :string
-#  nationality     :string
-#  passport_number :string
-#  religion        :string           default("scientology")
+#  id              :bigint           not null, primary key
+#  first_name      :string(255)
+#  gender          :string(255)      default("not_sure")
+#  last_name       :string(255)
+#  nationality     :string(255)
+#  passport_number :string(255)
+#  religion        :string(255)      default("scientology")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
@@ -19,6 +19,9 @@ class Passenger < ApplicationRecord
 
   has_tags :special_needs
   has_tags :meal_preferences, restrict_to_existing: true
+
+  # We add creative excuses to not let the passenger board the plane
+  has_tags :excuses, polymorphic: true
 
   def full_name
     "#{first_name} #{last_name}"

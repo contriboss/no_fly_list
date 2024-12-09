@@ -57,19 +57,48 @@ module NoFlyList
     # @return [Boolean] true if the proxy is valid
     def save
       return true unless @pending_changes.any?
+      return false unless valid?
 
-      if valid?
-        @model.transaction do
-          @model.send(@context.to_s).destroy_all
+      # Prevent recursive validation
+      @saving = true
+      begin
+        model.class.transaction do
+          # Always save parent first if needed
+          if model.new_record? && !model.save
+            errors.add(:base, 'Failed to save parent record')
+            raise ActiveRecord::Rollback
+          end
+
+          # Clear existing tags
+          model.send(context_taggings).delete_all
+
+          # Create new tags
           @pending_changes.each do |tag_name|
             tag = find_or_create_tag(tag_name)
-            @model.send(@context.to_s) << tag if tag
+            next unless tag
+
+            attributes = {
+              tag: tag,
+              context: @context.to_s.singularize
+            }
+
+            if setup[:polymorphic]
+              attributes[:taggable_type] = model.class.name
+              attributes[:taggable_id] = model.id
+            end
+
+            # Use create! to ensure we catch any errors
+            model.send(context_taggings).create!(attributes)
           end
         end
+
         refresh_from_database
         true
-      else
+      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
+        errors.add(:base, e.message)
         false
+      ensure
+        @saving = false
       end
     end
 
@@ -175,14 +204,6 @@ module NoFlyList
       current_list
     end
 
-    def current_list
-      if @pending_changes.any?
-        @pending_changes
-      else
-        @model.send(@context.to_s).pluck(:name)
-      end
-    end
-
     def refresh_from_database
       @pending_changes = []
     end
@@ -198,7 +219,9 @@ module NoFlyList
       return unless @restrict_to_existing
       return if @pending_changes.empty?
 
-      existing_tags = @tag_model.where(name: @pending_changes).pluck(:name)
+      # Transform tags to lowercase for comparison
+      normalized_changes = @pending_changes.map(&:downcase)
+      existing_tags = @tag_model.where('LOWER(name) IN (?)', normalized_changes).pluck(:name)
       missing_tags = @pending_changes - existing_tags
 
       return unless missing_tags.any?
@@ -206,11 +229,65 @@ module NoFlyList
       errors.add(:base, "The following tags do not exist: #{missing_tags.join(', ')}")
     end
 
+    def context_taggings
+      @context_taggings ||= "#{@context.to_s.singularize}_taggings"
+    end
+
+    def setup
+      @setup ||= begin
+        context = @context.to_sym
+        @model.class._no_fly_list.tag_contexts[context]
+      end
+    end
+
     def find_or_create_tag(tag_name)
       if @restrict_to_existing
         @tag_model.find_by(name: tag_name)
       else
         @tag_model.find_or_create_by(name: tag_name)
+      end
+    end
+
+    def save_changes
+      # Clear existing tags
+      model.send(context_taggings).delete_all
+
+      # Create new tags
+      @pending_changes.each do |tag_name|
+        tag = find_or_create_tag(tag_name)
+        next unless tag
+
+        attributes = {
+          tag: tag,
+          context: @context.to_s.singularize
+        }
+
+        # Add polymorphic attributes for polymorphic tags
+        if setup[:polymorphic]
+          attributes[:taggable_type] = model.class.name
+          attributes[:taggable_id] = model.id
+        end
+
+        # Use create! to ensure we catch any errors
+        model.send(context_taggings).create!(attributes)
+      end
+
+      refresh_from_database
+      true
+    end
+
+    def current_list
+      if @pending_changes.any?
+        @pending_changes
+      elsif setup[:polymorphic]
+        tagging_table = setup[:tagging_class_name].tableize
+        @model.send(@context.to_s)
+              .joins("INNER JOIN #{tagging_table} ON #{tagging_table}.tag_id = tags.id")
+              .where("#{tagging_table}.taggable_type = ? AND #{tagging_table}.taggable_id = ?",
+                     @model.class.name, @model.id)
+              .pluck(:name)
+      else
+        @model.send(@context.to_s).pluck(:name)
       end
     end
 

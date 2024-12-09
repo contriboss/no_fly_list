@@ -15,9 +15,17 @@ module NoFlyList
 
   # Common tagging tables
   autoload :TaggableRecord
+
   autoload_under 'taggable_record' do
     autoload :Configuration
+    autoload :Config
+    autoload_under 'taggable_record/query' do
+      autoload :SqliteStrategy
+      autoload :MysqlStrategy
+      autoload :PostgresqlStrategy
+    end
   end
+
   autoload :TaggingRecord
   autoload :TagRecord
 

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module NoFlyList
-  # This module provides functionality for a tag table that contains global tags for a model.
+  # This module provides functionality for a tagging table that contains tags relationship for a model.
   #
-  # This concern can be included in models that represent tags to manage global tags across different records.
+  # This concern can be included in models that represent tags to manage the relationship between the tag and the model.
   #
   # @example Usage
-  #   class User::Tag < ApplicationRecord
+  #   class User::Tagging < ApplicationRecord
   #     include NoFlyList::TaggingModel
   #   end
   module TaggingRecord

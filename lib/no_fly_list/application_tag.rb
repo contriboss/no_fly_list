@@ -12,12 +12,5 @@ module NoFlyList
   #   end
   module ApplicationTag
     extend ActiveSupport::Concern
-
-    included do
-      self.table_name = Rails.configuration.no_fly_list.application_tag_table_name || 'application_tags'
-
-      has_many :taggings, class_name: 'ApplicationTagging', dependent: :destroy, foreign_key: 'tag_id'
-      has_many :taggables, through: :taggings, source: :taggable
-    end
   end
 end
