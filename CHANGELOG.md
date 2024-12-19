@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.4.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.3.0...no_fly_list/v0.4.0) (2024-12-19)
+
+
+### Features
+
+* **counter-cache:** Add counter support for tag contexts ([#7](https://github.com/contriboss/no_fly_list/issues/7)) ([8e11848](https://github.com/contriboss/no_fly_list/commit/8e11848abae940d82e4eb26982f197e0ac097cf9))
+
 ## [0.3.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.2.1...no_fly_list/v0.3.0) (2024-12-19)
 
 
