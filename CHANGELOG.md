@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.5.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.4.0...no_fly_list/v0.5.0) (2024-12-19)
+
+
+### Features
+
+* **tagging:** support comma-separated tags in add/remove methods ([453286d](https://github.com/contriboss/no_fly_list/commit/453286d6849919f24c86fbed15dad52122b7202c))
+
 ## [0.4.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.3.0...no_fly_list/v0.4.0) (2024-12-19)
 
 
