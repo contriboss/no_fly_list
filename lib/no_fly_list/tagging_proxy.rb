@@ -74,8 +74,11 @@ module NoFlyList
           end
 
           # Clear existing tags
+          old_count = model.send(context_taggings).count
           model.send(context_taggings).delete_all
 
+          # Update counter
+          model.update_column("#{@context}_count", 0) if setup[:counter_cache]
           # Create new tags
           @pending_changes.each do |tag_name|
             tag = find_or_create_tag(tag_name)
@@ -95,6 +98,8 @@ module NoFlyList
             model.send(context_taggings).create!(attributes)
           end
         end
+        # Update counter to match the actual count
+        model.update_column("#{@context}_count", @pending_changes.size) if setup[:counter_cache]
 
         refresh_from_database
         true
@@ -147,10 +152,10 @@ module NoFlyList
       "#<#{self.class.name} tags=#{current_list.inspect} transformer_with=#{transformer_name} >"
     end
 
-    def add(tag)
+    def add(*tags)
       return self if limit_reached?
 
-      new_tags = transformer.parse_tags(tag)
+      new_tags = tags.flatten.map { |tag| transformer.parse_tags(tag) }.flatten
       return self if new_tags.empty?
 
       @pending_changes = current_list + new_tags
@@ -158,8 +163,8 @@ module NoFlyList
       self
     end
 
-    def add!(tag)
-      add(tag)
+    def add!(*tags)
+      add(*tags)
       save
     end
 
@@ -179,12 +184,14 @@ module NoFlyList
       old_list = current_list.dup
       @pending_changes = []
       mark_record_dirty if @pending_changes != old_list
+      model.write_attribute("#{@context}_count", 0) if setup[:counter_cache]
       self
     end
 
     def clear!
       @model.send(@context.to_s).destroy_all
       @pending_changes = []
+      @model.update_column("#{@context}_count", 0) if setup[:counter_cache]
       self
     end
 

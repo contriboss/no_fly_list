@@ -17,8 +17,9 @@
 class Passenger < ApplicationRecord
   include NoFlyList::TaggableRecord
 
-  has_tags :special_needs
+  has_tags :special_needs, counter_cache: true
   has_tags :meal_preferences, restrict_to_existing: true
+  has_tags :dietary_requirements, counter_cache: true
 
   # We add creative excuses to not let the passenger board the plane
   has_tags :excuses, polymorphic: true

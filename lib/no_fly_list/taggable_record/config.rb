@@ -24,7 +24,8 @@ module NoFlyList
         restrict_to_existing: options.fetch(:restrict_to_existing, false),
         limit: options.fetch(:limit, nil),
         case_sensitive: options.fetch(:case_sensitive, true),
-        adapter: @adapter
+        adapter: @adapter,
+        counter_cache: options.fetch(:counter_cache, false)
       }
     end
 
