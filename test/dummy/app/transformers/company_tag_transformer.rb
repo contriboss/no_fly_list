@@ -3,7 +3,7 @@
 module CompanyTagTransformer
   module_function
 
-  # @param tags [String|Array<String>]
+  # @param [String|Array<String>] tags
   def parse_tags(tags)
     if tags.is_a?(Array)
       tags
@@ -13,7 +13,7 @@ module CompanyTagTransformer
   end
 
   # Recreate a string from an array of tags
-  # @param tags [Array<String>]
+  # @param [Array<String>] tags
   # @return [String]
   def recreate_string(tags)
     tags.join(separator)

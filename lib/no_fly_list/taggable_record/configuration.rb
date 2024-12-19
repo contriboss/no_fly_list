@@ -13,9 +13,9 @@ module NoFlyList
       module_function
 
       # Main entry point for setting up tagging functionality on a model
-      # @param taggable_klass [Class] The model class to make taggable
-      # @param contexts [Array<Symbol>] The contexts to create tags for (e.g., :tags, :colors)
-      # @param options [Hash] Configuration options for tagging behavior
+      # @param [Class] taggable_klass The model class to make taggable
+      # @param [Array<Symbol>] contexts The contexts to create tags for (e.g., :tags, :colors)
+      # @param [Hash] options Configuration options for tagging behavior
       def setup_tagging(taggable_klass, contexts, options = {})
         contexts.each do |context|
           setup = build_tag_setup(taggable_klass, context, options)
