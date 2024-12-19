@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.3.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.2.1...no_fly_list/v0.3.0) (2024-12-19)
+
+
+### Features
+
+* Add change tracking to tag lists ([7ecc8ba](https://github.com/contriboss/no_fly_list/commit/7ecc8ba1af3e989a9da4eb8e0b6ea7769fedb056))
+
 ## [0.2.1](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.2.0...no_fly_list/v0.2.1) (2024-12-19)
 
 
