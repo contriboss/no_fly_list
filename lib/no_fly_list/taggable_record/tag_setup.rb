@@ -4,7 +4,7 @@ module NoFlyList
   module TaggableRecord
     class TagSetup
       attr_reader :taggable_klass, :context, :transformer, :polymorphic,
-                  :restrict_to_existing, :limit,
+                  :restrict_to_existing, :limit, :counter_cache,
                   :tag_class_name, :tagging_class_name, :adapter
 
       def initialize(taggable_klass, context, options = {})
@@ -13,6 +13,8 @@ module NoFlyList
         @transformer = options.fetch(:transformer, ApplicationTagTransformer)
         @polymorphic = options.fetch(:polymorphic, false)
         @restrict_to_existing = options.fetch(:restrict_to_existing, false)
+        @counter_cache = options.fetch(:counter_cache, false)
+        @counter_cache_column = "#{context}_count"
         @limit = options.fetch(:limit, nil)
         @tag_class_name = determine_tag_class_name(taggable_klass, options)
         @tagging_class_name = determine_tagging_class_name(taggable_klass, options)

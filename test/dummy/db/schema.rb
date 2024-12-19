@@ -105,6 +105,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "gender", default: "not_sure"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "special_needs_count", default: 0, null: false
+    t.integer "dietary_requirements_count", default: 0, null: false
   end
 
   create_table "people", force: :cascade do |t|

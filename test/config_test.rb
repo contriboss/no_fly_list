@@ -9,7 +9,7 @@ module NoFlyList
     test "has correct tag contexts configured" do
       config = Passenger._no_fly_list
 
-      assert_equal %i[special_needs meal_preferences excuses].sort,
+      assert_equal %i[dietary_requirements special_needs meal_preferences excuses].sort,
                    config.tag_contexts.keys.sort
     end
 

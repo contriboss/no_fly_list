@@ -20,5 +20,7 @@ class CreateTaggingPassenger < ActiveRecord::Migration[7.2]
     add_index :passenger_taggings, %i[taggable_id tag_id], unique: true
     add_foreign_key :passenger_taggings, :passenger_tags, column: :tag_id
     add_foreign_key :passenger_taggings, :passengers, column: :taggable_id
+    add_column :passengers, :special_needs_count, :integer, default: 0, null: false
+    add_column :passengers, :dietary_requirements_count, :integer, default: 0, null: false
   end
 end

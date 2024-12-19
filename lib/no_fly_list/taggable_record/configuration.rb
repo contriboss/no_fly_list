@@ -94,7 +94,8 @@ module NoFlyList
 
           belongs_to :taggable,
                      class_name: setup.taggable_klass.name,
-                     foreign_key: "taggable_id"
+                     foreign_key: "taggable_id",
+                     counter_cache: setup.counter_cache ? "#{setup.context}_count" : nil
 
           include NoFlyList::TaggingRecord
         end
@@ -156,12 +157,14 @@ module NoFlyList
 
       # Sets up associations for local (non-global) tags
       def setup_local_tag_associations(setup, singular_name)
+        plural_name = setup.context.to_s
         # Set up tag class associations
         setup.tag_class_name.constantize.class_eval do
           has_many :"#{singular_name}_taggings",
                    -> { where(context: singular_name) },
                    class_name: setup.tagging_class_name,
                    foreign_key: "tag_id",
+                   counter_cache: setup.counter_cache ? "#{plural_name}_count" : nil,
                    dependent: :destroy
 
           has_many :"#{singular_name}_taggables",
