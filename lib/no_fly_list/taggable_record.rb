@@ -4,6 +4,12 @@ module NoFlyList
   module TaggableRecord
     extend ActiveSupport::Concern
 
+    # @!attribute _no_fly_list
+    #   @return [Config] Configuration for this taggable record
+    #
+    # @!method save_tag_proxies
+    #   @api private
+    #   Saves pending tag changes before saving the record
     included do
       class_attribute :_no_fly_list, instance_writer: false
       self._no_fly_list = Config.new self
@@ -12,6 +18,9 @@ module NoFlyList
       before_validation :validate_tag_proxies
     end
 
+    # Determines if record needs saving due to tag changes
+    # @return [Boolean] True if tags have pending changes
+    # @api private
     def changed_for_autosave?
       super || tag_proxies_changed?
     end
@@ -83,6 +92,11 @@ module NoFlyList
       end
     end
 
+    # Class methods added to taggable models
+    # @!method has_tags(*contexts, **options)
+    #   Configures tagging contexts for the model
+    #   @param contexts [Array<Symbol>] Tag context names
+    #   @param options [Hash] Options for configuring tagging
     class_methods do
       def has_tags(*contexts, **options)
         contexts.each do |context|

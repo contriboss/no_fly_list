@@ -13,6 +13,13 @@ module NoFlyList
     validate :validate_limit
     validate :validate_existing_tags
 
+    # Creates a new tagging proxy
+    # @param model [ActiveRecord::Base] Model being tagged
+    # @param tag_model [Class] Tag model class
+    # @param context [Symbol] Tagging context (e.g. :colors)
+    # @param transformer [Class] Class for transforming tag strings
+    # @param restrict_to_existing [Boolean] Only allow existing tags
+    # @param limit [Integer, nil] Maximum number of tags allowed
     def initialize(model, tag_model, context,
                    transformer: ApplicationTagTransformer,
                    restrict_to_existing: false,
@@ -26,6 +33,9 @@ module NoFlyList
       @pending_changes = []
     end
 
+    # Determines if tags have changed from database state
+    # @return [Boolean] True if pending changes differ from database
+    # @api private
     def changed?
       @pending_changes.present? && @pending_changes != current_list_from_database
     end
@@ -50,6 +60,9 @@ module NoFlyList
         method_name.to_s =~ /\A(.+)_list(=)?\z/
     end
 
+    # Handles numeric coercion
+    # @param other [Object] Object to coerce with
+    # @return [Array] Two-element array for coercion
     def coerce(other)
       [ other, to_a ]
     end
@@ -153,11 +166,11 @@ module NoFlyList
     end
 
     # Adds one or more tags to the current tag list
-    # @param *tags [Array<String, #to_s>] Tags to add, can be:
-    #   - A comma-separated string ("tag1, tag2")
-    #   - An array of strings (["tag1", "tag2"])
+    # @param *tags [Array<String, Array<String>>] Tags to add:
+    #   - Single string with comma-separated values ("tag1, tag2")
+    #   - Single array of strings (["tag1", "tag2"])
     #   - Multiple string arguments ("tag1", "tag2")
-    # @return [self] Returns self for method chaining
+    # @return [TaggingProxy] Returns self for method chaining
     def add(*tags)
       return self if limit_reached?
 
@@ -179,11 +192,12 @@ module NoFlyList
     end
 
     # Removes one or more tags from the current tag list
-    # @param *tags [Array<String, #to_s>] Tags to remove, can be:
-    #   - A comma-separated string ("tag1, tag2")
-    #   - An array of strings (["tag1", "tag2"])
+    # @param *tags [Array<String, Array<String>>] Tags to remove:
+    #   - Single string with comma-separated values ("tag1, tag2")
+    #   - Single array of strings (["tag1", "tag2"])
     #   - Multiple string arguments ("tag1", "tag2")
-    # @return [self] Returns self for method chaining
+    # @return [TaggingProxy] Returns self for method chaining
+    # @raise [ActiveRecord::RecordInvalid] If validation fails
     def remove(*tags)
       old_list = current_list.dup
       tags_to_remove = if tags.size == 1 && tags.first.is_a?(String)
@@ -201,6 +215,10 @@ module NoFlyList
       save
     end
 
+    # Clears all tags
+    # @return [TaggingProxy] Returns self for method chaining
+    # @example Clear all tags
+    #   tags.clear #=> []
     def clear
       old_list = current_list.dup
       @pending_changes = []
@@ -209,6 +227,11 @@ module NoFlyList
       self
     end
 
+    # Forces clearing all tags by destroying records
+    # @return [TaggingProxy] Returns self for method chaining
+    # @example Force clear tags
+    #   tags.clear! #=> []
+    # @raise [ActiveRecord::RecordNotDestroyed] If destroy fails
     def clear!
       @model.send(@context.to_s).destroy_all
       @pending_changes = []
@@ -216,14 +239,23 @@ module NoFlyList
       self
     end
 
+    # Checks if a tag exists in the list
+    # @param tag [String] Tag to check for
+    # @return [Boolean] True if tag exists
     def include?(tag)
       current_list.include?(tag.to_s.strip)
     end
 
+    # Checks if tag list is empty
+    # @return [Boolean] True if no tags exist
     def empty?
       current_list.empty?
     end
 
+    # Required by ActiveModel::Validations
+    # @return [Boolean] Always returns false since proxy isn't persisted
+    # @api private
+    # @see https://api.rubyonrails.org/classes/ActiveModel/Validations.html
     def persisted?
       false
     end

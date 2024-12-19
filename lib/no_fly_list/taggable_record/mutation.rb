@@ -5,6 +5,12 @@ module NoFlyList
     module Mutation
       module_function
 
+      # Defines mutation methods for tag manipulation
+      # @param setup [TagSetup] Tag setup configuration
+      # @return [void]
+      # @example Generated methods
+      #   add_tags("red, blue")    # Adds tags
+      #   remove_tags("red")       # Removes tags
       def define_mutation_methods(setup)
         context = setup.context
         taggable_klass = setup.taggable_klass

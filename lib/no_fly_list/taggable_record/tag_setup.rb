@@ -2,11 +2,42 @@
 
 module NoFlyList
   module TaggableRecord
+    # Handles setup and configuration of tagging for a model
     class TagSetup
-      attr_reader :taggable_klass, :context, :transformer, :polymorphic,
-                  :restrict_to_existing, :limit, :counter_cache,
-                  :tag_class_name, :tagging_class_name, :adapter
+      # @return [Class] Model class being made taggable
+      attr_reader :taggable_klass
 
+      # @return [Symbol] Tagging context name
+      attr_reader :context
+
+      # @return [Class] Tag string transformer
+      attr_reader :transformer
+
+      # @return [Boolean] Whether tags are polymorphic
+      attr_reader :polymorphic
+
+      # @return [Boolean] Whether to restrict to existing tags
+      attr_reader :restrict_to_existing
+
+      # @return [Integer, nil] Maximum number of tags allowed
+      attr_reader :limit
+
+      # @return [Boolean] Whether to use counter cache
+      attr_reader :counter_cache
+
+      # @return [String] Name of tag class
+      attr_reader :tag_class_name
+
+      # @return [String] Name of tagging class
+      attr_reader :tagging_class_name
+
+      # @return [Symbol] Database adapter type (:postgresql, :mysql, :sqlite)
+      attr_reader :adapter
+
+      # Creates new tag setup configuration
+      # @param taggable_klass [Class] Model to configure
+      # @param context [Symbol] Tag context name
+      # @param options [Hash] Setup options
       def initialize(taggable_klass, context, options = {})
         @taggable_klass = taggable_klass
         @context = context

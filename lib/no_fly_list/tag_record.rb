@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module NoFlyList
-  # This module provides functionality for a tag table that contains tags for a model.
+  # Provides tag table functionality for models
+  # Handles tag attributes and delegation of methods
   #
   # @example Usage
   #   class User::Tag < ApplicationRecord
@@ -11,6 +12,9 @@ module NoFlyList
     extend ActiveSupport::Concern
 
     included do
+      # @!method to_s
+      #   @return [String] String representation of tag name
+      # @!method inspect
       delegate :to_s, to: :name
       alias_attribute :tag_name, :name
       def inspect
