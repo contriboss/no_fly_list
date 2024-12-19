@@ -152,10 +152,20 @@ module NoFlyList
       "#<#{self.class.name} tags=#{current_list.inspect} transformer_with=#{transformer_name} >"
     end
 
+    # Adds one or more tags to the current tag list
+    # @param *tags [Array<String, #to_s>] Tags to add, can be:
+    #   - A comma-separated string ("tag1, tag2")
+    #   - An array of strings (["tag1", "tag2"])
+    #   - Multiple string arguments ("tag1", "tag2")
+    # @return [self] Returns self for method chaining
     def add(*tags)
       return self if limit_reached?
 
-      new_tags = tags.flatten.map { |tag| transformer.parse_tags(tag) }.flatten
+      new_tags = if tags.size == 1 && tags.first.is_a?(String)
+                   transformer.parse_tags(tags.first)
+      else
+                   tags.flatten.map { |tag| transformer.parse_tags(tag) }.flatten
+      end
       return self if new_tags.empty?
 
       @pending_changes = current_list + new_tags
@@ -168,9 +178,20 @@ module NoFlyList
       save
     end
 
-    def remove(tag)
+    # Removes one or more tags from the current tag list
+    # @param *tags [Array<String, #to_s>] Tags to remove, can be:
+    #   - A comma-separated string ("tag1, tag2")
+    #   - An array of strings (["tag1", "tag2"])
+    #   - Multiple string arguments ("tag1", "tag2")
+    # @return [self] Returns self for method chaining
+    def remove(*tags)
       old_list = current_list.dup
-      @pending_changes = current_list - [ tag.to_s.strip ]
+      tags_to_remove = if tags.size == 1 && tags.first.is_a?(String)
+                         transformer.parse_tags(tags.first)
+      else
+                         tags.flatten.map { |tag| tag.to_s.strip }
+      end
+      @pending_changes = current_list - tags_to_remove
       mark_record_dirty if @pending_changes != old_list
       self
     end

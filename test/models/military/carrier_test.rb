@@ -63,6 +63,20 @@ module Military
       assert_empty enterprise.mission_types_list.to_a
     end
 
+    test "add and remove tags using string format" do
+      # Add multiple tags using comma-separated string
+      enterprise.add_mission_types("Flagships, Deep-Space Explorations")
+      assert_equal [ "Flagships", "Deep-Space Explorations" ], enterprise.mission_types_list.to_a
+
+      # Add another tag using string
+      enterprise.add_mission_types("Scientific Missions")
+      assert_equal [ "Flagships", "Deep-Space Explorations", "Scientific Missions" ], enterprise.mission_types_list.to_a
+
+      # Remove multiple tags using comma-separated string
+      enterprise.remove_mission_types("Flagships, Scientific Missions")
+      assert_equal [ "Deep-Space Explorations" ], enterprise.mission_types_list.to_a
+    end
+
     test "reports changes through changed_for_autosave?" do
       assert_not enterprise.changed_for_autosave?
 
