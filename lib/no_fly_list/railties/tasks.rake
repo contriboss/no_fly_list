@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 namespace :no_fly_list do
-  desc 'List all taggable records'
+  desc "List all taggable records"
   task taggable_records: :environment do
     Rails.application.eager_load!
     taggable_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([NoFlyList::TaggableRecord]) }
+      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::TaggableRecord ]) }
     end
 
     puts "Found #{taggable_classes.size} taggable classes:\n\n"
@@ -15,11 +15,11 @@ namespace :no_fly_list do
     end
   end
 
-  desc 'List all tag records'
+  desc "List all tag records"
   task tag_records: :environment do
     Rails.application.eager_load!
     tag_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([NoFlyList::ApplicationTag, NoFlyList::TagRecord]) }
+      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::ApplicationTag, NoFlyList::TagRecord ]) }
     end
 
     puts "Found #{tag_classes.size} tag classes:\n\n"
@@ -29,11 +29,11 @@ namespace :no_fly_list do
     end
   end
 
-  desc 'Check taggable records and their associated tables'
+  desc "Check taggable records and their associated tables"
   task check_taggable_records: :environment do
     Rails.application.eager_load!
     taggable_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([NoFlyList::TaggableRecord]) }
+      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::TaggableRecord ]) }
     end
 
     puts "Checking #{taggable_classes.size} taggable classes:\n\n"

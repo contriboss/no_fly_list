@@ -75,8 +75,10 @@ module NoFlyList
 
       instance_variables.any? do |var|
         next unless var.to_s.match?(/_list_proxy$/)
+
         proxy = instance_variable_get(var)
         next if proxy.nil?
+
         proxy.changed?
       end
     end

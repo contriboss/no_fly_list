@@ -51,7 +51,7 @@ module NoFlyList
     end
 
     def coerce(other)
-      [other, to_a]
+      [ other, to_a ]
     end
 
     def to_ary
@@ -69,7 +69,7 @@ module NoFlyList
         model.class.transaction do
           # Always save parent first if needed
           if model.new_record? && !model.save
-            errors.add(:base, 'Failed to save parent record')
+            errors.add(:base, "Failed to save parent record")
             raise ActiveRecord::Rollback
           end
 
@@ -149,8 +149,10 @@ module NoFlyList
 
     def add(tag)
       return self if limit_reached?
+
       new_tags = transformer.parse_tags(tag)
       return self if new_tags.empty?
+
       @pending_changes = current_list + new_tags
       @pending_changes.uniq!
       self
@@ -163,7 +165,7 @@ module NoFlyList
 
     def remove(tag)
       old_list = current_list.dup
-      @pending_changes = current_list - [tag.to_s.strip]
+      @pending_changes = current_list - [ tag.to_s.strip ]
       mark_record_dirty if @pending_changes != old_list
       self
     end
@@ -240,7 +242,7 @@ module NoFlyList
 
       # Transform tags to lowercase for comparison
       normalized_changes = @pending_changes.map(&:downcase)
-      existing_tags = @tag_model.where('LOWER(name) IN (?)', normalized_changes).pluck(:name)
+      existing_tags = @tag_model.where("LOWER(name) IN (?)", normalized_changes).pluck(:name)
       missing_tags = @pending_changes - existing_tags
 
       return unless missing_tags.any?
@@ -309,6 +311,7 @@ module NoFlyList
 
     def mark_record_dirty
       return unless model.respond_to?(:changed_attributes)
+
       # We use a virtual attribute name based on the context
       # This ensures the record is marked as changed when tags are modified
       model.send(:attribute_will_change!, "#{context}_list")

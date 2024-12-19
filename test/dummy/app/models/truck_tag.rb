@@ -14,7 +14,7 @@
 #  index_truck_tags_on_name  (name) UNIQUE
 #
 class TruckTag < SecondaryRecord
-  has_many :taggings, class_name: 'Truck::Tagging', dependent: :destroy
-  has_many :taggables, through: :taggings, source: :taggable, source_type: 'Truck'
+  has_many :taggings, class_name: "Truck::Tagging", dependent: :destroy
+  has_many :taggables, through: :taggings, source: :taggable, source_type: "Truck"
   include NoFlyList::TagRecord
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'mutation'
-require_relative 'query'
-require_relative 'tag_setup'
+require_relative "mutation"
+require_relative "query"
+require_relative "tag_setup"
 
 module NoFlyList
   module TaggableRecord
@@ -90,11 +90,11 @@ module NoFlyList
           # Add the basic associations
           belongs_to :tag,
                      class_name: setup.tag_class_name,
-                     foreign_key: 'tag_id'
+                     foreign_key: "tag_id"
 
           belongs_to :taggable,
                      class_name: setup.taggable_klass.name,
-                     foreign_key: 'taggable_id'
+                     foreign_key: "taggable_id"
 
           include NoFlyList::TaggingRecord
         end
@@ -118,12 +118,12 @@ module NoFlyList
         # Set up the tag model associations
         setup.tag_class_name.constantize.class_eval do
           # Fix: Use 'tagging' for the join association when context is 'tag'
-          association_name = (singular_name == 'tag' ? :taggings : :"#{singular_name}_taggings")
+          association_name = (singular_name == "tag" ? :taggings : :"#{singular_name}_taggings")
 
           has_many association_name,
                    -> { where(context: singular_name) },
                    class_name: setup.tagging_class_name,
-                   foreign_key: 'tag_id',
+                   foreign_key: "tag_id",
                    dependent: :destroy
 
           # Fix: Use consistent naming for through association
@@ -137,7 +137,7 @@ module NoFlyList
         setup.tagging_class_name.constantize.class_eval do
           belongs_to :tag,
                      class_name: setup.tag_class_name,
-                     foreign_key: 'tag_id'
+                     foreign_key: "tag_id"
 
           belongs_to :taggable,
                      polymorphic: true
@@ -149,7 +149,7 @@ module NoFlyList
 
           validates :tag_id, uniqueness: {
             scope: %i[taggable_type taggable_id context],
-            message: 'has already been tagged on this record in this context'
+            message: "has already been tagged on this record in this context"
           }
         end
       end
@@ -161,7 +161,7 @@ module NoFlyList
           has_many :"#{singular_name}_taggings",
                    -> { where(context: singular_name) },
                    class_name: setup.tagging_class_name,
-                   foreign_key: 'tag_id',
+                   foreign_key: "tag_id",
                    dependent: :destroy
 
           has_many :"#{singular_name}_taggables",
@@ -173,17 +173,17 @@ module NoFlyList
         setup.tagging_class_name.constantize.class_eval do
           belongs_to :tag,
                      class_name: setup.tag_class_name,
-                     foreign_key: 'tag_id'
+                     foreign_key: "tag_id"
 
           # For local tags, we use a simple belongs_to without polymorphic
           belongs_to :taggable,
                      class_name: setup.taggable_klass.name,
-                     foreign_key: 'taggable_id'
+                     foreign_key: "taggable_id"
 
           validates :tag, :taggable, :context, presence: true
           validates :tag_id, uniqueness: {
             scope: %i[taggable_id context],
-            message: 'has already been tagged on this record in this context'
+            message: "has already been tagged on this record in this context"
           }
         end
       end
@@ -196,7 +196,7 @@ module NoFlyList
             has_many :"#{singular_name}_taggings",
                      -> { where(context: singular_name) },
                      class_name: setup.tagging_class_name,
-                     foreign_key: 'taggable_id',
+                     foreign_key: "taggable_id",
                      as: :taggable,
                      dependent: :destroy
 
@@ -217,7 +217,7 @@ module NoFlyList
             has_many :"#{singular_name}_taggings",
                      -> { where(context: singular_name) },
                      class_name: setup.tagging_class_name,
-                     foreign_key: 'taggable_id',
+                     foreign_key: "taggable_id",
                      dependent: :destroy
 
             has_many setup.context,
@@ -237,9 +237,9 @@ module NoFlyList
           define_method :create_and_set_proxy do |instance_variable_name, setup|
             tag_model = if setup.polymorphic
                           setup.tag_class_name.constantize
-                        else
+            else
                           self.class.const_get("#{self.class.name}Tag")
-                        end
+            end
 
             proxy = TaggingProxy.new(
               self,
@@ -298,9 +298,9 @@ module NoFlyList
       end
 
       def define_constant_in_namespace(const_name)
-        parts = const_name.split('::')
+        parts = const_name.split("::")
         const_name = parts.pop
-        namespace = parts.join('::').safe_constantize || Object
+        namespace = parts.join("::").safe_constantize || Object
         return if namespace.const_defined?(const_name, false)
 
         namespace.const_set(const_name, yield)

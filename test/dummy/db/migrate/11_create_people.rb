@@ -9,8 +9,8 @@ class CreatePeople < ActiveRecord::Migration[7.2]
       t.string :email
       t.text :address
 
-      t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
-      t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
+      t.timestamp :created_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
+      t.timestamp :updated_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
     end
 
     create_table :person_tags do |t|

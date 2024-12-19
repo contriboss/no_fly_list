@@ -1,0 +1,8 @@
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# ignore schema.rb
+AllCops:
+  Exclude:
+    - test/dummy/db/schema.rb
+    - test/dummy/db/secondary_schema.rb
