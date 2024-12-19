@@ -12,6 +12,10 @@ module NoFlyList
       before_validation :validate_tag_proxies
     end
 
+    def changed_for_autosave?
+      super || tag_proxies_changed?
+    end
+
     private
 
     def validate_tag_proxies
@@ -64,6 +68,17 @@ module NoFlyList
 
     def options_for_context(context)
       tag_contexts[context.to_sym]
+    end
+
+    def tag_proxies_changed?
+      return false if @saving_proxies || @validating_proxies
+
+      instance_variables.any? do |var|
+        next unless var.to_s.match?(/_list_proxy$/)
+        proxy = instance_variable_get(var)
+        next if proxy.nil?
+        proxy.changed?
+      end
     end
 
     class_methods do

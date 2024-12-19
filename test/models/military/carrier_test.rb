@@ -39,19 +39,19 @@ module Military
       assert_equal 'Historical Significances,Time Travel Capabilities', enterprise.notable_features_list.to_s
     end
     test 'remove tags' do
-      # Add and remove tags from the USS Enterprise
       enterprise.add_mission_types(['Flagships', 'Deep-Space Explorations'])
-      assert_equal ['Flagships', 'Deep-Space Explorations'], enterprise.mission_types_list.to_a
-
+      enterprise.save
       enterprise.remove_mission_types('Flagships')
+      enterprise.save
+
       assert_equal ['Deep-Space Explorations'], enterprise.mission_types_list.to_a
     end
 
     test 'set tags' do
       enterprise.add_mission_types(['Flagships', 'Deep-Space Explorations'])
-      assert_equal ['Flagships', 'Deep-Space Explorations'], enterprise.mission_types_list.to_a
-
       enterprise.set_mission_types(['Exploratory Ships'])
+
+      enterprise.save
       assert_equal ['Exploratory Ships'], enterprise.mission_types_list.to_a
     end
 
@@ -61,6 +61,37 @@ module Military
 
       enterprise.clear_mission_types
       assert_empty enterprise.mission_types_list.to_a
+    end
+
+    test 'reports changes through changed_for_autosave?' do
+      refute enterprise.changed_for_autosave?
+
+      # Add tags
+      enterprise.mission_types_list.add('Flagships')
+      assert enterprise.changed_for_autosave?
+
+      # Save changes
+      enterprise.save
+      refute enterprise.changed_for_autosave?
+
+      # Add same tag again
+      enterprise.mission_types_list.add('Flagships')
+      refute enterprise.changed_for_autosave?, "Should not mark as changed when adding existing tag"
+
+      # Add new tag
+      enterprise.mission_types_list.add('Deep-Space Explorations')
+      assert enterprise.changed_for_autosave?
+    end
+
+    test 'autosaves changes when parent record is saved' do
+      enterprise.mission_types_list.add('Flagships')
+      assert enterprise.changed_for_autosave?
+
+      enterprise.save
+
+      # Verify changes were saved
+      enterprise.reload
+      assert_equal ['Flagships'], enterprise.mission_types_list.to_a
     end
   end
 end

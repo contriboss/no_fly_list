@@ -26,6 +26,10 @@ module NoFlyList
       @pending_changes = []
     end
 
+    def changed?
+      @pending_changes.present? && @pending_changes != current_list_from_database
+    end
+
     def method_missing(method_name, *args)
       if current_list.respond_to?(method_name)
         current_list.send(method_name, *args)
@@ -145,10 +149,8 @@ module NoFlyList
 
     def add(tag)
       return self if limit_reached?
-
       new_tags = transformer.parse_tags(tag)
       return self if new_tags.empty?
-
       @pending_changes = current_list + new_tags
       @pending_changes.uniq!
       self
@@ -160,7 +162,9 @@ module NoFlyList
     end
 
     def remove(tag)
+      old_list = current_list.dup
       @pending_changes = current_list - [tag.to_s.strip]
+      mark_record_dirty if @pending_changes != old_list
       self
     end
 
@@ -170,7 +174,9 @@ module NoFlyList
     end
 
     def clear
+      old_list = current_list.dup
       @pending_changes = []
+      mark_record_dirty if @pending_changes != old_list
       self
     end
 
@@ -193,6 +199,19 @@ module NoFlyList
     end
 
     private
+
+    def current_list_from_database
+      if setup[:polymorphic]
+        tagging_table = setup[:tagging_class_name].tableize
+        @model.send(@context.to_s)
+              .joins("INNER JOIN #{tagging_table} ON #{tagging_table}.tag_id = tags.id")
+              .where("#{tagging_table}.taggable_type = ? AND #{tagging_table}.taggable_id = ?",
+                     @model.class.name, @model.id)
+              .pluck(:name)
+      else
+        @model.send(@context.to_s).pluck(:name)
+      end
+    end
 
     def set_list(_context, value)
       @pending_changes = transformer.parse_tags(value)
@@ -279,20 +298,20 @@ module NoFlyList
     def current_list
       if @pending_changes.any?
         @pending_changes
-      elsif setup[:polymorphic]
-        tagging_table = setup[:tagging_class_name].tableize
-        @model.send(@context.to_s)
-              .joins("INNER JOIN #{tagging_table} ON #{tagging_table}.tag_id = tags.id")
-              .where("#{tagging_table}.taggable_type = ? AND #{tagging_table}.taggable_id = ?",
-                     @model.class.name, @model.id)
-              .pluck(:name)
       else
-        @model.send(@context.to_s).pluck(:name)
+        current_list_from_database
       end
     end
 
     def limit_reached?
       @limit && current_list.size >= @limit
+    end
+
+    def mark_record_dirty
+      return unless model.respond_to?(:changed_attributes)
+      # We use a virtual attribute name based on the context
+      # This ensures the record is marked as changed when tags are modified
+      model.send(:attribute_will_change!, "#{context}_list")
     end
   end
 end
