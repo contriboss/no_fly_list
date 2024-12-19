@@ -7,10 +7,10 @@ class CreatePassengers < ActiveRecord::Migration[7.2]
       t.string :last_name
       t.string :passport_number
       t.string :nationality
-      t.string :religion, default: 'scientology'
-      t.string :gender, default: 'not_sure'
-      t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
-      t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
+      t.string :religion, default: "scientology"
+      t.string :gender, default: "not_sure"
+      t.timestamp :created_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
+      t.timestamp :updated_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
     end
   end
 end

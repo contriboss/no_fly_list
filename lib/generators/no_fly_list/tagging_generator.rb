@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'rails/generators'
-require 'rails/generators/active_record'
-require 'rails/generators/named_base'
+require "forwardable"
+require "rails/generators"
+require "rails/generators/active_record"
+require "rails/generators/named_base"
 
 module NoFlyList
   module Generators
     class TaggingGenerator < Rails::Generators::NamedBase
       include ActiveRecord::Generators::Migration
 
-      class_option :database, type: :string, default: 'primary',
-                              desc: 'Use different database for migration'
+      class_option :database, type: :string, default: "primary",
+                              desc: "Use different database for migration"
 
       def self.default_generator_root
         File.dirname(__FILE__)
@@ -19,8 +19,8 @@ module NoFlyList
 
       def create_migration_file
         ensure_model_exists
-        migration_template 'create_tagging_table.rb.erb',
-                           [db_migrate_path, "create_#{migration_name}.rb"].compact.join('/')
+        migration_template "create_tagging_table.rb.erb",
+                           [ db_migrate_path, "create_#{migration_name}.rb" ].compact.join("/")
       end
 
       def self.next_migration_number(dirname)

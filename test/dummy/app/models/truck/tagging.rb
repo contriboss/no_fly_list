@@ -23,9 +23,9 @@
 #  fk_rails_...  (taggable_id => trucks.id)
 #
 class Truck::Tagging < SecondaryRecord
-  self.table_name = 'truck_taggings'
+  self.table_name = "truck_taggings"
 
-  belongs_to :taggable, class_name: 'Truck', foreign_key: 'taggable_id'
-  belongs_to :tag, class_name: 'TruckTag'
+  belongs_to :taggable, class_name: "Truck", foreign_key: "taggable_id"
+  belongs_to :tag, class_name: "TruckTag"
   include NoFlyList::TaggingRecord
 end

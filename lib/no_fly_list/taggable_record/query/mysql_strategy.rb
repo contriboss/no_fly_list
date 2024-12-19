@@ -40,8 +40,8 @@ module NoFlyList
               return none if tags.empty?
 
               count_function = Arel::Nodes::NamedFunction.new(
-                'COUNT',
-                [Arel::Nodes::NamedFunction.new('DISTINCT', [tag_table[:name]])]
+                "COUNT",
+                [ Arel::Nodes::NamedFunction.new("DISTINCT", [ tag_table[:name] ]) ]
               )
 
               query = Arel::SelectManager.new(self)
@@ -78,11 +78,11 @@ module NoFlyList
                                 .where(context: singular_name)
                                 .where(taggable_type: name)
                                 .select(:taggable_id)
-                         else
+              else
                            setup.tagging_class_name.constantize
                                 .where(context: singular_name)
                                 .select(:taggable_id)
-                         end
+              end
 
               where("#{table_name}.#{primary_key} NOT IN (?)", subquery)
             }
@@ -95,8 +95,8 @@ module NoFlyList
                 send("without_#{context}")
               else
                 Arel::Nodes::NamedFunction.new(
-                  'COUNT',
-                  [Arel::Nodes::NamedFunction.new('DISTINCT', [tag_table[:id]])]
+                  "COUNT",
+                  [ Arel::Nodes::NamedFunction.new("DISTINCT", [ tag_table[:id] ]) ]
                 )
 
                 # Build the query for records having exactly the tags

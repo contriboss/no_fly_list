@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails/generators'
-require 'rails/generators/active_record'
-require 'rails/generators/named_base'
+require "rails/generators"
+require "rails/generators/active_record"
+require "rails/generators/named_base"
 
 # Usage:
 # bin/rails generate no_fly_list:application_tag
@@ -11,15 +11,15 @@ module NoFlyList
   module Generators
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
-      source_root File.expand_path('templates', __dir__)
+      source_root File.expand_path("templates", __dir__)
 
-      argument :connection_name, type: :string, desc: 'The name of the database connection', default: 'primary'
+      argument :connection_name, type: :string, desc: "The name of the database connection", default: "primary"
 
       def copy_application_tag
         ensure_connection_exists
-        template 'application_tag.rb.erb', File.join('app/models', 'application_tag.rb')
-        template 'application_tagging.rb.erb', File.join('app/models', 'application_tagging.rb')
-        migration_template 'create_application_tagging_table.rb.erb', 'db/migrate/create_application_tagging_table.rb'
+        template "application_tag.rb.erb", File.join("app/models", "application_tag.rb")
+        template "application_tagging.rb.erb", File.join("app/models", "application_tagging.rb")
+        migration_template "create_application_tagging_table.rb.erb", "db/migrate/create_application_tagging_table.rb"
       end
 
       def self.next_migration_number(dirname)

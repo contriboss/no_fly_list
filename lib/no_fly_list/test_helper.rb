@@ -45,9 +45,9 @@ module NoFlyList
     def assert_polymorphic_tag_classes_exist(tags_klass, tagging_klass)
       # Verify they include the correct modules
       assert tags_klass.include?(NoFlyList::ApplicationTag),
-             'Polymorphic Tag should include NoFlyList::ApplicationTag'
+             "Polymorphic Tag should include NoFlyList::ApplicationTag"
       assert tagging_klass.include?(NoFlyList::ApplicationTagging),
-             'Polymorphic Tagging should include NoFlyList::ApplicationTagging'
+             "Polymorphic Tagging should include NoFlyList::ApplicationTagging"
     end
 
     def assert_local_tag_classes_exist(klass, context)

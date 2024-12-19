@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class BusTest < ActiveSupport::TestCase
   include NoFlyList::TestHelper
@@ -9,11 +9,11 @@ class BusTest < ActiveSupport::TestCase
   should have_many(:color_taggings)
   should have_many(:colors).through(:color_taggings)
 
-  test 'assert_taggable_record' do
+  test "assert_taggable_record" do
     assert_taggable_record(Bus, :colors)
   end
 
-  test 'test limit with number' do
+  test "test limit with number" do
     bus = buses(:city_express)
     bus.colors_list = %w[red green blue]
     bus.colors_list.save
@@ -25,7 +25,7 @@ class BusTest < ActiveSupport::TestCase
     proxy.save
 
     assert_not proxy.valid?
-    assert_includes proxy.errors.full_messages, 'Cannot have more than 3 tags (attempting to save 4)'
+    assert_includes proxy.errors.full_messages, "Cannot have more than 3 tags (attempting to save 4)"
     assert_equal 0, bus2.colors_list.count
   end
 end

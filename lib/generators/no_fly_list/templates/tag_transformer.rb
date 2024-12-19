@@ -18,6 +18,6 @@ module ApplicationTagTransformer
 
   # @return [String]
   def separator
-    ','
+    ","
   end
 end

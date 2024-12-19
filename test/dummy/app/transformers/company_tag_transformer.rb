@@ -21,6 +21,6 @@ module CompanyTagTransformer
 
   # @return [String]
   def separator
-    ';'
+    ";"
   end
 end

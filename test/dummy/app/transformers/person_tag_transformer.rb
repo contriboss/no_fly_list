@@ -21,6 +21,6 @@ module PersonTagTransformer
 
   # @return [String]
   def separator
-    '/'
+    "/"
   end
 end

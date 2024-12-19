@@ -32,9 +32,9 @@ module NoFlyList
 
     def determine_adapter
       case taggable_class.connection.adapter_name.downcase
-      when 'postgresql'
+      when "postgresql"
         :postgresql
-      when 'mysql2'
+      when "mysql2"
         :mysql
       else
         :sqlite

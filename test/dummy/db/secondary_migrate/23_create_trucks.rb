@@ -9,8 +9,8 @@ class CreateTrucks < ActiveRecord::Migration[7.2]
       t.integer :capacity_tons
       t.string :driver_name
 
-      t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
-      t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
+      t.timestamp :created_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
+      t.timestamp :updated_at, default: -> { "CURRENT_TIMESTAMP" }, null: false
     end
   end
 end
