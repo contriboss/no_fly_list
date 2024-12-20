@@ -13,8 +13,8 @@ module NoFlyList
     }.freeze
 
     REQUIRED_COLUMNS = {
-      tag: ['name'],
-      tagging: ['tag_id', 'taggable_id', 'context']
+      tag: [ "name" ],
+      tagging: %w[tag_id taggable_id context]
     }.freeze
 
     def self.adapter_color(klass)
@@ -28,9 +28,9 @@ module NoFlyList
 
     def self.check_table(klass)
       klass.table_exists?
-      [true, "#{colorize('✓', :green)} Table exists: #{klass.table_name}"]
+      [ true, "#{colorize('✓', :green)} Table exists: #{klass.table_name}" ]
     rescue StandardError => e
-      [false, "#{colorize('✗', :red)} Error: #{e.message}"]
+      [ false, "#{colorize('✗', :red)} Error: #{e.message}" ]
     end
 
     def self.verify_columns(klass, type)
@@ -61,16 +61,15 @@ module NoFlyList
     def self.find_taggable_classes
       Rails.application.eager_load!
       ActiveRecord::Base.descendants.select do |klass|
-        klass.included_modules.any? { |mod| mod.in?([NoFlyList::TaggableRecord]) }
+        klass.included_modules.any? { |mod| mod.in?([ NoFlyList::TaggableRecord ]) }
       end
     end
 
     def self.find_tag_classes
       Rails.application.eager_load!
       ActiveRecord::Base.descendants.select do |klass|
-        klass.included_modules.any? { |mod| mod.in?([NoFlyList::ApplicationTag, NoFlyList::TagRecord]) }
+        klass.included_modules.any? { |mod| mod.in?([ NoFlyList::ApplicationTag, NoFlyList::TagRecord ]) }
       end
     end
   end
 end
-

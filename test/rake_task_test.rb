@@ -25,7 +25,7 @@ class RakeTaskTest < ActiveSupport::TestCase
   end
 
   def strip_color_codes(string)
-    string.gsub(/\e\[\d+(?:;\d+)*m/, '')
+    string.gsub(/\e\[\d+(?:;\d+)*m/, "")
   end
 
   test "taggable_records task lists all taggable classes" do

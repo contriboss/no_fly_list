@@ -20,7 +20,7 @@ namespace :no_fly_list do
 
     classes.each do |klass|
       color = NoFlyList::TaskHelpers.adapter_color(klass)
-      type = klass.included_modules.include?(NoFlyList::ApplicationTag) ? 'Global' : 'Model-specific'
+      type = klass.included_modules.include?(NoFlyList::ApplicationTag) ? "Global" : "Model-specific"
 
       puts "#{color}#{klass.name}#{NoFlyList::TaskHelpers::COLORS[:reset]}"
       puts "  Type: #{type}"
@@ -42,8 +42,8 @@ namespace :no_fly_list do
       puts "  #{message}"
 
       [
-        ["#{klass.name}Tag", "Tags", :tag],
-        ["#{klass.name}::Tagging", "Taggings", :tagging]
+        [ "#{klass.name}Tag", "Tags", :tag ],
+        [ "#{klass.name}::Tagging", "Taggings", :tagging ]
       ].each do |class_name, type, column_type|
         if (check_class = NoFlyList::TaskHelpers.check_class(class_name))
           status, message = NoFlyList::TaskHelpers.check_table(check_class)
@@ -53,13 +53,13 @@ namespace :no_fly_list do
             puts "  #{NoFlyList::TaskHelpers.format_columns(check_class)}"
           end
         else
-          puts "  #{NoFlyList::TaskHelpers::colorize('✗', :red)} #{type} class not found: #{class_name}"
+          puts "  #{NoFlyList::TaskHelpers.colorize('✗', :red)} #{type} class not found: #{class_name}"
         end
       end
 
       klass._no_fly_list.tag_contexts.each do |context, config|
         puts "\n  Context: #{context}"
-        bullet = NoFlyList::TaskHelpers::colorize('•', :green)
+        bullet = NoFlyList::TaskHelpers.colorize("•", :green)
         puts "  #{bullet} Tag class: #{config[:tag_class_name]}"
         puts "  #{bullet} Tagging class: #{config[:tagging_class_name]}"
         puts "  #{bullet} Polymorphic: #{config[:polymorphic]}"
