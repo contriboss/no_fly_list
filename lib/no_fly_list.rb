@@ -32,4 +32,5 @@ module NoFlyList
   autoload :TaggingProxy
 
   autoload :TestHelper
+  autoload :TaskHelpers
 end

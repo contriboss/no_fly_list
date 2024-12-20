@@ -1,93 +1,72 @@
-# frozen_string_literal: true
-
 namespace :no_fly_list do
-  desc "List all taggable records"
+  desc "List all models using NoFlyList::TaggableRecord with details about their tagging configurations"
   task taggable_records: :environment do
-    Rails.application.eager_load!
-    taggable_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::TaggableRecord ]) }
-    end
+    classes = NoFlyList::TaskHelpers.find_taggable_classes
+    puts "Found #{classes.size} taggable classes:\n\n"
 
-    puts "Found #{taggable_classes.size} taggable classes:\n\n"
-
-    taggable_classes.each do |klass|
-      puts "Class: #{klass.name}"
+    classes.each do |klass|
+      color = NoFlyList::TaskHelpers.adapter_color(klass)
+      puts "#{color}#{klass.name}#{NoFlyList::TaskHelpers::COLORS[:reset]}"
+      puts "  Tag Contexts: #{klass._no_fly_list&.tag_contexts&.keys&.join(', ')}"
+      puts "  Tables: #{klass.table_name}"
+      puts
     end
   end
 
-  desc "List all tag records"
+  desc "List all tag classes (both global and model-specific) with their inheritance chain"
   task tag_records: :environment do
-    Rails.application.eager_load!
-    tag_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::ApplicationTag, NoFlyList::TagRecord ]) }
-    end
+    classes = NoFlyList::TaskHelpers.find_tag_classes
+    puts "Found #{classes.size} tag classes:\n\n"
 
-    puts "Found #{tag_classes.size} tag classes:\n\n"
+    classes.each do |klass|
+      color = NoFlyList::TaskHelpers.adapter_color(klass)
+      type = klass.included_modules.include?(NoFlyList::ApplicationTag) ? 'Global' : 'Model-specific'
 
-    tag_classes.each do |klass|
-      puts "Class: #{klass.name}"
+      puts "#{color}#{klass.name}#{NoFlyList::TaskHelpers::COLORS[:reset]}"
+      puts "  Type: #{type}"
+      puts "  Table: #{klass.table_name}"
+      puts
     end
   end
 
-  desc "Check taggable records and their associated tables"
+  desc "Validate database schema for all taggable models"
   task check_taggable_records: :environment do
-    Rails.application.eager_load!
-    taggable_classes = ActiveRecord::Base.descendants.select do |klass|
-      klass.included_modules.any? { |mod| mod.in?([ NoFlyList::TaggableRecord ]) }
-    end
+    classes = NoFlyList::TaskHelpers.find_taggable_classes
+    puts "Checking #{classes.size} taggable classes:\n\n"
 
-    puts "Checking #{taggable_classes.size} taggable classes:\n\n"
+    classes.each do |klass|
+      color = NoFlyList::TaskHelpers.adapter_color(klass)
+      puts "Checking Class: #{color}#{klass.name}#{NoFlyList::TaskHelpers::COLORS[:reset]}"
 
-    taggable_classes.each do |klass|
-      puts "Checking Class: #{klass.name}"
+      status, message = NoFlyList::TaskHelpers.check_table(klass)
+      puts "  #{message}"
 
-      # ANSI color codes
-      green = "\e[32m"
-      red = "\e[31m"
-      reset = "\e[0m"
-
-      # Check main table exists
-      begin
-        klass.table_exists?
-        puts "  #{green}✓#{reset} Main table exists: #{klass.table_name}"
-      rescue StandardError => e
-        puts "  #{red}✗#{reset} Error checking main table: #{e.message}"
-      end
-
-      # Dynamically find tag and tagging class names
-      tag_class_name = "#{klass.name}Tag"
-      tagging_class_name = "#{klass.name}::Tagging"
-
-      begin
-        tag_class = Object.const_get(tag_class_name)
-
-        # Check tags table exists
-        if tag_class.table_exists?
-          puts "  #{green}✓#{reset} Tags table exists: #{tag_class.table_name}"
+      [
+        ["#{klass.name}Tag", "Tags", :tag],
+        ["#{klass.name}::Tagging", "Taggings", :tagging]
+      ].each do |class_name, type, column_type|
+        if (check_class = NoFlyList::TaskHelpers.check_class(class_name))
+          status, message = NoFlyList::TaskHelpers.check_table(check_class)
+          puts "  #{message}"
+          if status
+            puts "  #{NoFlyList::TaskHelpers.verify_columns(check_class, column_type)}"
+            puts "  #{NoFlyList::TaskHelpers.format_columns(check_class)}"
+          end
         else
-          puts "  #{red}✗#{reset} Tags table missing: #{tag_class.table_name}"
+          puts "  #{NoFlyList::TaskHelpers::colorize('✗', :red)} #{type} class not found: #{class_name}"
         end
-      rescue NameError
-        puts "  #{red}✗#{reset} Tag class not found: #{tag_class_name}"
-      rescue StandardError => e
-        puts "  #{red}✗#{reset} Error checking tag class: #{e.message}"
       end
 
-      begin
-        tagging_class = Object.const_get(tagging_class_name)
-
-        # Check taggings table exists
-        if tagging_class.table_exists?
-          puts "  #{green}✓#{reset} Taggings table exists: #{tagging_class.table_name}"
-        else
-          puts "  #{red}✗#{reset} Taggings table missing: #{tagging_class.table_name}"
+      klass._no_fly_list.tag_contexts.each do |context, config|
+        puts "\n  Context: #{context}"
+        bullet = NoFlyList::TaskHelpers::colorize('•', :green)
+        puts "  #{bullet} Tag class: #{config[:tag_class_name]}"
+        puts "  #{bullet} Tagging class: #{config[:tagging_class_name]}"
+        puts "  #{bullet} Polymorphic: #{config[:polymorphic]}"
+        if config[:polymorphic]
+          puts "  #{bullet} Required tagging columns: context, tag_id, taggable_id, taggable_type"
         end
-      rescue NameError
-        puts "  #{red}✗#{reset} Tagging class not found: #{tagging_class_name}"
-      rescue StandardError => e
-        puts "  #{red}✗#{reset} Error checking tagging class: #{e.message}"
       end
-
       puts "\n"
     end
   end
