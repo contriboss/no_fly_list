@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.6.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.5.0...no_fly_list/v0.6.0) (2024-12-20)
+
+
+### Features
+
+* **tasks:** add db schema validation tasks for tags/taggings ([03742bd](https://github.com/contriboss/no_fly_list/commit/03742bda81e910dc21f9cff5496743d15504565e))
+
 ## [0.5.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.4.0...no_fly_list/v0.5.0) (2024-12-19)
 
 
