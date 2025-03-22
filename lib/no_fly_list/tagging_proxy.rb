@@ -28,7 +28,7 @@ module NoFlyList
       @transformer = transformer.is_a?(String) ? transformer.constantize : transformer
       @restrict_to_existing = restrict_to_existing
       @limit = limit
-      @pending_changes = []
+      @pending_changes = nil # Use nil to indicate no changes yet
       @clear_operation = false
     end
 
@@ -36,7 +36,7 @@ module NoFlyList
     # @return [Boolean] True if pending changes differ from database
     # @api private
     def changed?
-      @clear_operation || (@pending_changes.present? && @pending_changes != current_list_from_database)
+      @clear_operation || (!@pending_changes.nil? && @pending_changes != current_list_from_database)
     end
 
     def method_missing(method_name, *args)
@@ -91,8 +91,9 @@ module NoFlyList
 
           # Update counter
           model.update_column("#{@context}_count", 0) if setup[:counter_cache]
+
           # Create new tags
-          @pending_changes.each do |tag_name|
+          pending_list.each do |tag_name|
             tag = find_or_create_tag(tag_name)
             next unless tag
 
@@ -111,7 +112,7 @@ module NoFlyList
           end
         end
         # Update counter to match the actual count
-        model.update_column("#{@context}_count", @pending_changes.size) if setup[:counter_cache]
+        model.update_column("#{@context}_count", pending_list.size) if setup[:counter_cache]
 
         refresh_from_database
         true
@@ -120,7 +121,6 @@ module NoFlyList
         false
       ensure
         @saving = false
-        @clear_operation = false
       end
     end
 
@@ -133,15 +133,22 @@ module NoFlyList
 
     # @return [Integer]
     def count
+      # Always return the database count for count operations
       @model.send(@context.to_s).count
     end
 
     # @return [Integer]
     def size
-      if @pending_changes.any? || @clear_operation
+      # For size, return the database count if we've had a validation error
+      if !valid?
+        count
+        # Otherwise show pending changes
+      elsif @clear_operation
+        0
+      elsif !@pending_changes.nil?
         @pending_changes.size
       else
-        @model.send(@context.to_s).size
+        count
       end
     end
 
@@ -164,7 +171,8 @@ module NoFlyList
     # @return [Array<String>] Tags to be added
     def additions
       return [] if @clear_operation
-      return [] if @pending_changes.empty?
+      return [] if @pending_changes.nil?
+
       @pending_changes - current_list_from_database
     end
 
@@ -173,7 +181,7 @@ module NoFlyList
     def removals
       if @clear_operation
         current_list_from_database
-      elsif @pending_changes.empty?
+      elsif @pending_changes.nil?
         []
       else
         current_list_from_database - @pending_changes
@@ -185,7 +193,7 @@ module NoFlyList
       if @clear_operation
         db_tags = current_list_from_database
         "#<#{self.class.name} tags=[] changes=[CLEARING ALL (#{db_tags.size}): #{db_tags.inspect}] transformer_with=#{transformer_name}>"
-      elsif @pending_changes.any?
+      elsif !@pending_changes.nil?
         add_list = additions
         remove_list = removals
         changes = []
@@ -216,8 +224,12 @@ module NoFlyList
       end
       return self if new_tags.empty?
 
-      @pending_changes = current_list + new_tags
+      # Initialize @pending_changes with database values if not yet initialized
+      @pending_changes = current_list_from_database if @pending_changes.nil?
+
+      @pending_changes = @pending_changes + new_tags
       @pending_changes.uniq!
+      mark_record_dirty
       self
     end
 
@@ -235,13 +247,19 @@ module NoFlyList
     # @raise [ActiveRecord::RecordInvalid] If validation fails
     def remove(*tags)
       @clear_operation = false
-      old_list = current_list.dup
+
+      # Initialize @pending_changes with database values if not yet initialized
+      @pending_changes = current_list_from_database if @pending_changes.nil?
+
+      old_list = @pending_changes.dup
+
       tags_to_remove = if tags.size == 1 && tags.first.is_a?(String)
                          transformer.parse_tags(tags.first)
       else
                          tags.flatten.map { |tag| tag.to_s.strip }
       end
-      @pending_changes = current_list - tags_to_remove
+
+      @pending_changes = @pending_changes - tags_to_remove
       mark_record_dirty if @pending_changes != old_list
       self
     end
@@ -315,6 +333,7 @@ module NoFlyList
     def set_list(_context, value)
       @clear_operation = false
       @pending_changes = transformer.parse_tags(value)
+      mark_record_dirty
       valid? # Just check validity without raising
       self
     end
@@ -324,25 +343,25 @@ module NoFlyList
     end
 
     def refresh_from_database
-      @pending_changes = []
+      @pending_changes = nil
       @clear_operation = false
     end
 
     def validate_limit
       return unless @limit
-      return if @pending_changes.size <= @limit
+      return if pending_list.size <= @limit
 
-      errors.add(:base, "Cannot have more than #{@limit} tags (attempting to save #{@pending_changes.size})")
+      errors.add(:base, "Cannot have more than #{@limit} tags (attempting to save #{pending_list.size})")
     end
 
     def validate_existing_tags
       return unless @restrict_to_existing
-      return if @pending_changes.empty?
+      return if pending_list.empty?
 
       # Transform tags to lowercase for comparison
-      normalized_changes = @pending_changes.map(&:downcase)
+      normalized_changes = pending_list.map(&:downcase)
       existing_tags = @tag_model.where("LOWER(name) IN (?)", normalized_changes).pluck(:name)
-      missing_tags = @pending_changes - existing_tags
+      missing_tags = pending_list - existing_tags
 
       return unless missing_tags.any?
 
@@ -355,9 +374,9 @@ module NoFlyList
 
     def setup
       @setup ||= begin
-        context = @context.to_sym
-        @model.class._no_fly_list.tag_contexts[context]
-      end
+                   context = @context.to_sym
+                   @model.class._no_fly_list.tag_contexts[context]
+                 end
     end
 
     def find_or_create_tag(tag_name)
@@ -368,38 +387,24 @@ module NoFlyList
       end
     end
 
-    def save_changes
-      # Clear existing tags
-      model.send(context_taggings).delete_all
-
-      # Create new tags
-      @pending_changes.each do |tag_name|
-        tag = find_or_create_tag(tag_name)
-        next unless tag
-
-        attributes = {
-          tag: tag,
-          context: @context.to_s.singularize
-        }
-
-        # Add polymorphic attributes for polymorphic tags
-        if setup[:polymorphic]
-          attributes[:taggable_type] = model.class.name
-          attributes[:taggable_id] = model.id
-        end
-
-        # Use create! to ensure we catch any errors
-        model.send(context_taggings).create!(attributes)
+    # Helper method to get the list of tags that should be saved
+    def pending_list
+      if @clear_operation
+        []
+      elsif !@pending_changes.nil?
+        @pending_changes
+      else
+        current_list_from_database
       end
-
-      refresh_from_database
-      true
     end
 
     def current_list
-      if @clear_operation
+      # If validation failed, always return what's in the database
+      if errors.any?
+        current_list_from_database
+      elsif @clear_operation
         []
-      elsif @pending_changes.any?
+      elsif !@pending_changes.nil?
         @pending_changes
       else
         current_list_from_database

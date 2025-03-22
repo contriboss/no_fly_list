@@ -77,4 +77,19 @@ class TaggingProxyTest < ActiveSupport::TestCase
     @car.colors_list.clear
     assert_equal [], @car.colors_list.to_a
   end
+
+  def test_add_tags_then_remove
+    @car.colors_list.add("red, blue")
+    @car.colors_list.remove("red")
+    assert_equal [ "blue" ], @car.colors_list.to_a
+    assert @car.save
+
+    @car.reload
+    assert_equal [ "blue" ], @car.colors_list.to_a
+    @car.colors_list.remove("blue")
+    assert_equal [], @car.colors_list.to_a
+    @car.save
+    @car.reload
+    assert_equal [], @car.colors_list.to_a
+  end
 end
