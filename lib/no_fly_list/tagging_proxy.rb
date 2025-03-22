@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module NoFlyList
   class TaggingProxy
     include Enumerable
@@ -31,13 +29,14 @@ module NoFlyList
       @restrict_to_existing = restrict_to_existing
       @limit = limit
       @pending_changes = []
+      @clear_operation = false
     end
 
     # Determines if tags have changed from database state
     # @return [Boolean] True if pending changes differ from database
     # @api private
     def changed?
-      @pending_changes.present? && @pending_changes != current_list_from_database
+      @clear_operation || (@pending_changes.present? && @pending_changes != current_list_from_database)
     end
 
     def method_missing(method_name, *args)
@@ -73,7 +72,7 @@ module NoFlyList
 
     # @return [Boolean] true if the proxy is valid
     def save
-      return true unless @pending_changes.any?
+      return true unless changed?
       return false unless valid?
 
       # Prevent recursive validation
@@ -121,6 +120,7 @@ module NoFlyList
         false
       ensure
         @saving = false
+        @clear_operation = false
       end
     end
 
@@ -138,7 +138,7 @@ module NoFlyList
 
     # @return [Integer]
     def size
-      if @pending_changes.any?
+      if @pending_changes.any? || @clear_operation
         @pending_changes.size
       else
         @model.send(@context.to_s).size
@@ -160,9 +160,43 @@ module NoFlyList
       @transformer_name ||= transformer.name
     end
 
+    # Returns tags that will be added (not in database but in pending changes)
+    # @return [Array<String>] Tags to be added
+    def additions
+      return [] if @clear_operation
+      return [] if @pending_changes.empty?
+      @pending_changes - current_list_from_database
+    end
+
+    # Returns tags that will be removed (in database but not in pending changes)
+    # @return [Array<String>] Tags to be removed
+    def removals
+      if @clear_operation
+        current_list_from_database
+      elsif @pending_changes.empty?
+        []
+      else
+        current_list_from_database - @pending_changes
+      end
+    end
+
     # @return [String]
     def inspect
-      "#<#{self.class.name} tags=#{current_list.inspect} transformer_with=#{transformer_name} >"
+      if @clear_operation
+        db_tags = current_list_from_database
+        "#<#{self.class.name} tags=[] changes=[CLEARING ALL (#{db_tags.size}): #{db_tags.inspect}] transformer_with=#{transformer_name}>"
+      elsif @pending_changes.any?
+        add_list = additions
+        remove_list = removals
+        changes = []
+        changes << "+#{add_list.inspect}" if add_list.any?
+        changes << "-#{remove_list.inspect}" if remove_list.any?
+        changes_str = changes.join(", ")
+
+        "#<#{self.class.name} tags=#{current_list.inspect} changes=[#{changes_str}] transformer_with=#{transformer_name}>"
+      else
+        "#<#{self.class.name} tags=#{current_list.inspect} transformer_with=#{transformer_name}>"
+      end
     end
 
     # Adds one or more tags to the current tag list
@@ -174,6 +208,7 @@ module NoFlyList
     def add(*tags)
       return self if limit_reached?
 
+      @clear_operation = false
       new_tags = if tags.size == 1 && tags.first.is_a?(String)
                    transformer.parse_tags(tags.first)
       else
@@ -199,6 +234,7 @@ module NoFlyList
     # @return [TaggingProxy] Returns self for method chaining
     # @raise [ActiveRecord::RecordInvalid] If validation fails
     def remove(*tags)
+      @clear_operation = false
       old_list = current_list.dup
       tags_to_remove = if tags.size == 1 && tags.first.is_a?(String)
                          transformer.parse_tags(tags.first)
@@ -220,9 +256,9 @@ module NoFlyList
     # @example Clear all tags
     #   tags.clear #=> []
     def clear
-      old_list = current_list.dup
+      @clear_operation = true
       @pending_changes = []
-      mark_record_dirty if @pending_changes != old_list
+      mark_record_dirty if current_list_from_database.any?
       model.write_attribute("#{@context}_count", 0) if setup[:counter_cache]
       self
     end
@@ -235,6 +271,7 @@ module NoFlyList
     def clear!
       @model.send(@context.to_s).destroy_all
       @pending_changes = []
+      @clear_operation = false
       @model.update_column("#{@context}_count", 0) if setup[:counter_cache]
       self
     end
@@ -276,6 +313,7 @@ module NoFlyList
     end
 
     def set_list(_context, value)
+      @clear_operation = false
       @pending_changes = transformer.parse_tags(value)
       valid? # Just check validity without raising
       self
@@ -287,6 +325,7 @@ module NoFlyList
 
     def refresh_from_database
       @pending_changes = []
+      @clear_operation = false
     end
 
     def validate_limit
@@ -358,7 +397,9 @@ module NoFlyList
     end
 
     def current_list
-      if @pending_changes.any?
+      if @clear_operation
+        []
+      elsif @pending_changes.any?
         @pending_changes
       else
         current_list_from_database

@@ -63,4 +63,18 @@ class TaggingProxyTest < ActiveSupport::TestCase
     @car.colors_list.remove([ "red", "blue", "green" ])
     assert_equal [ "yellow" ], @car.colors_list.to_a
   end
+
+  def test_clear_then_add
+    @car.colors_list.add("red, blue")
+    @car.colors_list.clear
+    assert_equal [], @car.colors_list.to_a
+
+    # Bug: The tags are not actually deleted from the database
+    @car.colors_list.add("test")
+    @car.save!
+    @car.reload
+    assert_equal [ "test" ], @car.colors_list.to_a
+    @car.colors_list.clear
+    assert_equal [], @car.colors_list.to_a
+  end
 end

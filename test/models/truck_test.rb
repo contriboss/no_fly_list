@@ -51,5 +51,6 @@ class TruckTest < ActiveSupport::TestCase
     truck.route_tags_list.clear
     assert_equal 2, truck.route_tags.count
     truck.route_tags_list.save
+    assert_equal 0, truck.route_tags.count
   end
 end
