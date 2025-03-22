@@ -12,4 +12,5 @@ gem "railties", rails_version
 gem "shoulda-context"
 gem "shoulda-matchers"
 gem "sqlite3"
+gem "simplecov", require: false
 gem "rubocop-rails-omakase"
