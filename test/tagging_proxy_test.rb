@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require "test_helper"
@@ -10,13 +9,13 @@ class TaggingProxyTest < ActiveSupport::TestCase
 
   def test_add_tags
     @car.colors_list.add("red, blue")
-    assert_equal ["red", "blue"], @car.colors_list.to_a
+    assert_equal [ "red", "blue" ], @car.colors_list.to_a
   end
 
   def test_remove_tags
     @car.colors_list.add("red, blue")
     @car.colors_list.remove("red")
-    assert_equal ["blue"], @car.colors_list.to_a
+    assert_equal [ "blue" ], @car.colors_list.to_a
   end
 
   def test_clear_tags
@@ -40,14 +39,14 @@ class TaggingProxyTest < ActiveSupport::TestCase
   def test_add_tags!
     @car.colors_list.clear
     @car.colors_list.add!("red, blue")
-    assert_equal ["red", "blue"], @car.colors_list.to_a
+    assert_equal [ "red", "blue" ], @car.colors_list.to_a
   end
 
   def test_remove_tags!
     @car.colors_list.clear
     @car.colors_list.add!("red, blue")
     @car.colors_list.remove!("red")
-    assert_equal ["blue"], @car.colors_list.to_a
+    assert_equal [ "blue" ], @car.colors_list.to_a
   end
 
   def test_clear_tags!
@@ -57,11 +56,11 @@ class TaggingProxyTest < ActiveSupport::TestCase
   end
 
   def test_add_tags_as_array
-    @car.colors_list.add(["red", "blue"])
-    @car.colors_list.add(["green", "yellow"])
-    assert_equal ["red", "blue", "green", "yellow"], @car.colors_list.to_a
+    @car.colors_list.add([ "red", "blue" ])
+    @car.colors_list.add([ "green", "yellow" ])
+    assert_equal [ "red", "blue", "green", "yellow" ], @car.colors_list.to_a
 
-    @car.colors_list.remove(["red", "blue", "green"])
-    assert_equal ["yellow"], @car.colors_list.to_a
+    @car.colors_list.remove([ "red", "blue", "green" ])
+    assert_equal [ "yellow" ], @car.colors_list.to_a
   end
 end
