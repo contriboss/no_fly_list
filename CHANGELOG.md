@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [0.7.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.6.0...no_fly_list/v0.7.0) (2025-03-22)
+
+
+### Features
+
+* fix TaggingProxy to handle clear operations and improve tag management ([027a603](https://github.com/contriboss/no_fly_list/commit/027a603b390ba9094913ea6d0bb6a531eb049202))
+* refactor TaggingProxy to use nil for pending changes and improve tag handling ([9defb2d](https://github.com/contriboss/no_fly_list/commit/9defb2d8bf5d938a8902c18c3826285a561ea048))
+* Update TaggingProxy tests to use Car model ([4395c3a](https://github.com/contriboss/no_fly_list/commit/4395c3a154df2586692b74d76ce1ab342798ef03))
+
 ## [0.6.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.5.0...no_fly_list/v0.6.0) (2024-12-20)
 
 
