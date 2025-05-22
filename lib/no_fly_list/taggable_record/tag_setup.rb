@@ -41,7 +41,7 @@ module NoFlyList
       def initialize(taggable_klass, context, options = {})
         @taggable_klass = taggable_klass
         @context = context
-        @transformer = options.fetch(:transformer, ApplicationTagTransformer)
+        @transformer = options.fetch(:transformer, 'ApplicationTagTransformer')
         @polymorphic = options.fetch(:polymorphic, false)
         @restrict_to_existing = options.fetch(:restrict_to_existing, false)
         @counter_cache = options.fetch(:counter_cache, false)

@@ -19,7 +19,7 @@ module NoFlyList
         taggable_class: @taggable_class.to_s,
         tag_class_name: tag_class_name,
         tagging_class_name: tagging_class_name,
-        transformer: options.fetch(:transformer, ApplicationTagTransformer).to_s,
+        transformer: options.fetch(:transformer, 'ApplicationTagTransformer').to_s,
         polymorphic: options.fetch(:polymorphic, false),
         restrict_to_existing: options.fetch(:restrict_to_existing, false),
         limit: options.fetch(:limit, nil),

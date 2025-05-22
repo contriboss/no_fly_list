@@ -74,6 +74,12 @@ module ApplicationTagTransformer
 end
 ```
 
+If you add `has_tags` before generating this file, the library will attempt to
+constantize `'ApplicationTagTransformer'`. If it's missing, a warning is output
+and `NoFlyList::DefaultTransformer` will be used instead. Create
+`ApplicationTagTransformer` (or specify another transformer) to avoid the
+warning.
+
 ### Database Setup
 
 For global tags:
@@ -171,7 +177,7 @@ Article.with_any_topics("rails")
 | `limit` | `nil` | Maximum tags per record |
 | `counter_cache` | `false` | Enable counter cache column |
 | `case_sensitive` | `true` | Case sensitive tag matching |
-| `transformer` | `ApplicationTagTransformer` | Custom tag parsing |
+| `transformer` | `'ApplicationTagTransformer'` | Custom tag parsing |
 | `tag_class_name` | `ModelTag` | Custom tag class name |
 | `tagging_class_name` | `Model::Tagging` | Custom tagging class name |
 
