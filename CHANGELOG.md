@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.7.1](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.0...no_fly_list/v0.7.1) (2025-05-22)
+
+
+### Bug Fixes
+
+* Stringify transformer to avoid unbootable app in case Taggable a… ([57d9ee1](https://github.com/contriboss/no_fly_list/commit/57d9ee10ef84c7f01f78646b95ec2d340b135cde))
+* Stringify transformer to avoid unbootable app in case Taggable app was used before generating the Application transformer ([07ca0e9](https://github.com/contriboss/no_fly_list/commit/07ca0e98a4e94b95e1505c2d312a01e53bb2118e))
+
 ## [0.7.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.6.0...no_fly_list/v0.7.0) (2025-03-22)
 
 
