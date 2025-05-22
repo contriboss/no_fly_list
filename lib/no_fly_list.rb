@@ -28,6 +28,7 @@ module NoFlyList
 
   autoload :TaggingRecord
   autoload :TagRecord
+  autoload :DefaultTransformer
 
   autoload :TaggingProxy
 

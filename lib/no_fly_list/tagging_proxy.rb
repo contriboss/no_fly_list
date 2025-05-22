@@ -19,17 +19,30 @@ module NoFlyList
     # @param restrict_to_existing [Boolean] Only allow existing tags
     # @param limit [Integer, nil] Maximum number of tags allowed
     def initialize(model, tag_model, context,
-                   transformer: ApplicationTagTransformer,
+                   transformer: 'ApplicationTagTransformer',
                    restrict_to_existing: false,
                    limit: nil)
       @model = model
       @tag_model = tag_model
       @context = context
-      @transformer = transformer.is_a?(String) ? transformer.constantize : transformer
+      @transformer = resolve_transformer(transformer)
       @restrict_to_existing = restrict_to_existing
       @limit = limit
       @pending_changes = nil # Use nil to indicate no changes yet
       @clear_operation = false
+    end
+
+    def resolve_transformer(trans)
+      const = trans
+      const = const.constantize if const.is_a?(String)
+      unless const.respond_to?(:parse_tags) && const.respond_to?(:recreate_string)
+        warn "NoFlyList: transformer #{trans.inspect} is invalid. Falling back to DefaultTransformer"
+        const = NoFlyList::DefaultTransformer
+      end
+      const
+    rescue NameError
+      warn "NoFlyList: transformer #{trans.inspect} not found. Falling back to DefaultTransformer"
+      NoFlyList::DefaultTransformer
     end
 
     # Determines if tags have changed from database state
