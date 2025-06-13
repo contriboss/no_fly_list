@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.7.2](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.1...no_fly_list/v0.7.2) (2025-06-13)
+
+
+### Bug Fixes
+
+* correct generators and test them ([273f50f](https://github.com/contriboss/no_fly_list/commit/273f50f4607aa5645429d3f3a3359dd7ffc66e22))
+* correct generators and test them ([b459060](https://github.com/contriboss/no_fly_list/commit/b45906025833c61a630ab9d266457361d14722f4))
+
 ## [0.7.1](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.0...no_fly_list/v0.7.1) (2025-05-22)
 
 
