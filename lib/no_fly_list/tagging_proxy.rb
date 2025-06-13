@@ -19,7 +19,7 @@ module NoFlyList
     # @param restrict_to_existing [Boolean] Only allow existing tags
     # @param limit [Integer, nil] Maximum number of tags allowed
     def initialize(model, tag_model, context,
-                   transformer: 'ApplicationTagTransformer',
+                   transformer: "ApplicationTagTransformer",
                    restrict_to_existing: false,
                    limit: nil)
       @model = model
