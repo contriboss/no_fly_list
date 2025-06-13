@@ -36,18 +36,17 @@ module NoFlyList
         if model_class < ActiveRecord::Base
           true
         else
-          say "#{class_name} is not an ActiveRecord model. Aborting generator.", :red
-          false
+          raise ArgumentError, "#{class_name} is not an ActiveRecord model. Aborting generator."
         end
       rescue NameError
-        say "#{class_name} is not a valid constant. Aborting generator.", :red
-        false
+        raise ArgumentError, "#{class_name} is not a valid constant. Aborting generator."
       end
 
       def model_abstract_class_name
-        model_class.ancestors.find do |klass|
-          klass.is_a?(Class) && klass.abstract_class?
-        end.name
+        klass = model_class.ancestors.find do |ancestor|
+          ancestor.is_a?(Class) && ancestor.abstract_class?
+        end
+        klass&.name || "ApplicationRecord"
       end
     end
   end

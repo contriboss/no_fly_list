@@ -9,6 +9,7 @@ module NoFlyList
   module Generators
     class TaggingGenerator < Rails::Generators::NamedBase
       include ActiveRecord::Generators::Migration
+      source_root File.expand_path("templates", __dir__)
 
       class_option :database, type: :string, default: "primary",
                               desc: "Use different database for migration"

@@ -39,13 +39,18 @@ module NoFlyList
 
       def connection_abstract_class_name
         # should be abstract class name
-        ActiveRecord::Base.descendants.find do |klass|
+        klass = ActiveRecord::Base.descendants.find do |klass|
           klass.abstract_class? && klass.connection_db_config.name == connection_name
-        end.name
+        end
+        klass&.name || "ApplicationRecord"
       end
 
       def migration_version
         "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+      end
+
+      def migration_class_name
+        "CreateApplicationTaggingTable"
       end
     end
   end

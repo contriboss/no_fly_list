@@ -19,7 +19,7 @@ module NoFlyList
 
     # @return [String]
     def separator
-      ','
+      ","
     end
   end
 end
