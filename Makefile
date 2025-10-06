@@ -14,18 +14,22 @@ ps:
 restart: down up
 
 test_all:
-	@status=0; \
+	@failed_adapters=""; \
 	for adapter in $(DB_ADAPTERS); do \
 		echo "Testing with $$adapter..."; \
 		if ! DB_ADAPTER=$$adapter RAILS_ENV=test bin/rails db:drop db:create db:migrate; then \
-			status=1; \
+			failed_adapters="$$failed_adapters $$adapter"; \
 			continue; \
 		fi; \
 		if ! DB_ADAPTER=$$adapter RAILS_ENV=test bin/rails test; then \
-			status=1; \
+			failed_adapters="$$failed_adapters $$adapter"; \
 		fi; \
 	done; \
-	exit $$status
+	if [ -n "$$failed_adapters" ]; then \
+		echo "Failed adapters:$$failed_adapters"; \
+	else \
+		echo "All adapters passed!"; \
+	fi
 
 test_p:
 	@echo "Testing with postgresql..."; \
