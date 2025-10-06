@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 17) do
-  create_table "application_taggings", force: :cascade do |t|
+  create_table "application_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.string "taggable_type", null: false
     t.bigint "taggable_id", null: false
@@ -24,14 +24,14 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.index ["taggable_type", "taggable_id"], name: "index_application_taggings_on_taggable"
   end
 
-  create_table "application_tags", force: :cascade do |t|
+  create_table "application_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_application_tags_on_name", unique: true
   end
 
-  create_table "companies", force: :cascade do |t|
+  create_table "companies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "industry"
     t.integer "founded_year"
@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "company_taggings", force: :cascade do |t|
+  create_table "company_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -51,14 +51,14 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.index ["taggable_id"], name: "index_company_taggings_on_taggable_id"
   end
 
-  create_table "company_tags", force: :cascade do |t|
+  create_table "company_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_company_tags_on_name", unique: true
   end
 
-  create_table "military_carrier_taggings", force: :cascade do |t|
+  create_table "military_carrier_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -66,11 +66,11 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.index ["taggable_id"], name: "index_military_carrier_taggings_on_taggable_id"
   end
 
-  create_table "military_carrier_tags", force: :cascade do |t|
+  create_table "military_carrier_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
   end
 
-  create_table "military_carriers", force: :cascade do |t|
+  create_table "military_carriers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "model"
     t.integer "capacity"
@@ -78,7 +78,7 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "passenger_taggings", force: :cascade do |t|
+  create_table "passenger_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -89,14 +89,14 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.index ["taggable_id"], name: "index_passenger_taggings_on_taggable_id"
   end
 
-  create_table "passenger_tags", force: :cascade do |t|
+  create_table "passenger_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_passenger_tags_on_name", unique: true
   end
 
-  create_table "passengers", force: :cascade do |t|
+  create_table "passengers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "passport_number"
@@ -109,7 +109,7 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.integer "dietary_requirements_count", default: 0, null: false
   end
 
-  create_table "people", force: :cascade do |t|
+  create_table "people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.date "birthdate"
@@ -119,13 +119,15 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "person_taggings", force: :cascade do |t|
+  create_table "person_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.bigint "taggable_id", null: false
     t.string "context", null: false
+    t.index ["tag_id"], name: "fk_rails_c226efc6c0"
+    t.index ["taggable_id"], name: "fk_rails_2d0fa276dc"
   end
 
-  create_table "person_tags", force: :cascade do |t|
+  create_table "person_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
   end
 
