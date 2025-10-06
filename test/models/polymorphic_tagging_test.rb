@@ -14,10 +14,10 @@ class PolymorphicTaggingTest < ActiveSupport::TestCase
   end
 
   teardown do
-    # Use destroy_all so dependent associations purge taggings before parents
-    Passenger.destroy_all
+    # Clear in order to handle foreign key constraints
     ApplicationTagging.destroy_all
     ApplicationTag.destroy_all
+    Passenger.destroy_all
   end
 
   test "can set and retrieve polymorphic tags" do
