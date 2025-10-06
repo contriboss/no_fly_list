@@ -14,9 +14,15 @@ class PolymorphicTaggingTest < ActiveSupport::TestCase
   end
 
   teardown do
+    # Clear in proper order to avoid foreign key constraint violations
     ApplicationTagging.delete_all
     ApplicationTag.delete_all
     Passenger.delete_all
+  rescue ActiveRecord::InvalidForeignKey
+    # If foreign key constraints prevent deletion, use destroy_all
+    ApplicationTagging.destroy_all
+    ApplicationTag.destroy_all
+    Passenger.destroy_all
   end
 
   test "can set and retrieve polymorphic tags" do

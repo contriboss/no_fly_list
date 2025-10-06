@@ -16,8 +16,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "taggable_type", null: false
     t.integer "taggable_id", null: false
     t.string "context", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["context"], name: "index_application_taggings_on_context"
     t.index ["tag_id"], name: "index_application_taggings_on_tag_id"
     t.index ["taggable_type", "taggable_id", "context", "tag_id"], name: "index_app_taggings_uniqueness", unique: true
@@ -26,8 +26,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
 
   create_table "application_tags", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_application_tags_on_name", unique: true
   end
 
@@ -36,16 +36,16 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "industry"
     t.integer "founded_year"
     t.string "ceo_name"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "company_taggings", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_company_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_company_taggings_on_taggable_id_and_tag_id", unique: true
     t.index ["taggable_id"], name: "index_company_taggings_on_taggable_id"
@@ -53,8 +53,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
 
   create_table "company_tags", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_company_tags_on_name", unique: true
   end
 
@@ -74,16 +74,16 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "name"
     t.string "model"
     t.integer "capacity"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "passenger_taggings", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_passenger_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_passenger_taggings_on_taggable_id_and_tag_id", unique: true
     t.index ["taggable_id"], name: "index_passenger_taggings_on_taggable_id"
@@ -91,8 +91,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
 
   create_table "passenger_tags", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_passenger_tags_on_name", unique: true
   end
 
@@ -103,8 +103,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "nationality"
     t.string "religion", default: "scientology"
     t.string "gender", default: "not_sure"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "special_needs_count", default: 0, null: false
     t.integer "dietary_requirements_count", default: 0, null: false
   end
@@ -115,8 +115,8 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.date "birthdate"
     t.string "email"
     t.text "address"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "person_taggings", force: :cascade do |t|
