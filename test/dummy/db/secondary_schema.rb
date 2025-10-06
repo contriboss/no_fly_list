@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 27) do
-  create_table "application_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "application_taggings", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.string "taggable_type", null: false
     t.bigint "taggable_id", null: false
@@ -24,14 +24,14 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.index ["taggable_type", "taggable_id"], name: "index_application_taggings_on_taggable"
   end
 
-  create_table "application_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "application_tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_application_tags_on_name", unique: true
   end
 
-  create_table "bus_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "bus_taggings", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -42,14 +42,14 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.index ["taggable_id"], name: "index_bus_taggings_on_taggable_id"
   end
 
-  create_table "bus_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "bus_tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_bus_tags_on_name", unique: true
   end
 
-  create_table "buses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "buses", force: :cascade do |t|
     t.string "route_number"
     t.integer "capacity"
     t.string "company"
@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "car_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "car_taggings", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -69,14 +69,14 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.index ["taggable_id"], name: "index_car_taggings_on_taggable_id"
   end
 
-  create_table "car_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "car_tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_car_tags_on_name", unique: true
   end
 
-  create_table "cars", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "cars", force: :cascade do |t|
     t.string "make"
     t.string "model"
     t.integer "year"
@@ -86,7 +86,7 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "truck_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "truck_taggings", force: :cascade do |t|
     t.bigint "taggable_id", null: false
     t.bigint "tag_id", null: false
     t.string "context", null: false
@@ -97,14 +97,14 @@ ActiveRecord::Schema[7.2].define(version: 27) do
     t.index ["taggable_id"], name: "index_truck_taggings_on_taggable_id"
   end
 
-  create_table "truck_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "truck_tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_truck_tags_on_name", unique: true
   end
 
-  create_table "trucks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "trucks", force: :cascade do |t|
     t.string "make"
     t.string "model"
     t.integer "year"
