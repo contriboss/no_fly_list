@@ -12,9 +12,9 @@
 
 ActiveRecord::Schema[7.2].define(version: 17) do
   create_table "application_taggings", force: :cascade do |t|
-    t.integer "tag_id", null: false
+    t.bigint "tag_id", null: false
     t.string "taggable_type", null: false
-    t.integer "taggable_id", null: false
+    t.bigint "taggable_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
