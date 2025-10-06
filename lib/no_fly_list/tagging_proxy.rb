@@ -332,11 +332,12 @@ module NoFlyList
 
     def current_list_from_database
       if setup[:polymorphic]
-        tagging_table = setup[:tagging_class_name].tableize
+        tagging_klass = setup[:tagging_class_name].constantize
+        tagging_table = tagging_klass.arel_table
+
         @model.send(@context.to_s)
-              .joins("INNER JOIN #{tagging_table} ON #{tagging_table}.tag_id = tags.id")
-              .where("#{tagging_table}.taggable_type = ? AND #{tagging_table}.taggable_id = ?",
-                     @model.class.name, @model.id)
+              .where(tagging_table[:taggable_type].eq(@model.class.name))
+              .where(tagging_table[:taggable_id].eq(@model.id))
               .pluck(:name)
       else
         @model.send(@context.to_s).pluck(:name)
