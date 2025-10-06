@@ -9,7 +9,8 @@ gem "pg"
 rails_version = ENV.fetch("RAILS_VERSION", "~> 8.0")
 gem "mysql2"
 gem "railties", rails_version
-gem "shoulda-context"
+# shoulda-context has compatibility issues with Rails 8.1+
+gem "shoulda-context", "~> 2.0" unless rails_version.match?(/8\.1/)
 gem "shoulda-matchers"
 gem "sqlite3"
 gem "simplecov", require: false

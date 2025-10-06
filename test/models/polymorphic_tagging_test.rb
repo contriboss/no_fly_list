@@ -14,9 +14,10 @@ class PolymorphicTaggingTest < ActiveSupport::TestCase
   end
 
   teardown do
-    ApplicationTagging.delete_all
-    ApplicationTag.delete_all
-    Passenger.delete_all
+    # Clear in order to handle foreign key constraints
+    ApplicationTagging.destroy_all
+    ApplicationTag.destroy_all
+    Passenger.destroy_all
   end
 
   test "can set and retrieve polymorphic tags" do

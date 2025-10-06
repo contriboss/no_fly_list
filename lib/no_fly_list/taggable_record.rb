@@ -59,7 +59,12 @@ module NoFlyList
 
           proxy = instance_variable_get(var)
           next if proxy.nil?
-          return false unless proxy.save
+          unless proxy.save
+            proxy.errors.each do |error|
+              errors.add(:base, error.message)
+            end
+            throw :abort
+          end
         end
         true
       ensure

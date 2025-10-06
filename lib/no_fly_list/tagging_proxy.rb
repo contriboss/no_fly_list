@@ -346,7 +346,7 @@ module NoFlyList
 
     def set_list(_context, value)
       @clear_operation = false
-      @pending_changes = transformer.parse_tags(value)
+      @pending_changes = transformer.parse_tags(value).uniq.reject(&:blank?)
       mark_record_dirty
       valid? # Just check validity without raising
       self
