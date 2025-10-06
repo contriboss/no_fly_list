@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.7.3](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.2...no_fly_list/v0.7.3) (2025-10-06)
+
+
+### Bug Fixes
+
+* resolve SQLite ambiguous column name error with polymorphic tags ([#20](https://github.com/contriboss/no_fly_list/issues/20)) ([ac5d513](https://github.com/contriboss/no_fly_list/commit/ac5d5138f389d88e5475057c9ea2dd24a153074a))
+* resolve test infrastructure issues across all Rails versions ([#22](https://github.com/contriboss/no_fly_list/issues/22)) ([1743358](https://github.com/contriboss/no_fly_list/commit/1743358debfa13b3d2b6afd37bf147e71a4c86bf))
+
 ## [0.7.2](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.1...no_fly_list/v0.7.2) (2025-06-13)
 
 
