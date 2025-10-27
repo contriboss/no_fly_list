@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         ruby: ['3.2', '3.3', '3.4']
-        rails: ['~> 7.2', '~> 8.0', '~> 8.1.0.beta1']
+        rails: ['~> 7.2', '~> 8.0', '~> 8.1.0']
       fail-fast: false  # Ensures that all matrix jobs continue even if one fails
     env:
       RAILS_ENV: test
