@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.7.4](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.3...no_fly_list/v0.7.4) (2026-04-08)
+
+
+### Bug Fixes
+
+* support STI models with explicit tag_class_name option ([#25](https://github.com/contriboss/no_fly_list/issues/25)) ([b9c800c](https://github.com/contriboss/no_fly_list/commit/b9c800cdae6212635bec09087a6fdbae2070dcb0))
+
 ## [0.7.3](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.2...no_fly_list/v0.7.3) (2025-10-06)
 
 
