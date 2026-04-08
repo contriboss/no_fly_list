@@ -82,8 +82,6 @@ module NoFlyList
 
       # Creates a new tagging class with appropriate configuration
       def create_tagging_class(setup, base_class)
-        setup.context.to_s.singularize
-
         Class.new(base_class) do
           self.table_name = "#{setup.taggable_klass.table_name.singularize}_taggings"
 
@@ -173,21 +171,26 @@ module NoFlyList
         end
 
         # Set up tagging class associations
-        setup.tagging_class_name.constantize.class_eval do
-          belongs_to :tag,
-                     class_name: setup.tag_class_name,
-                     foreign_key: "tag_id"
+        # Guard belongs_to to prevent STI subclasses from overwriting
+        # the base class association on a shared tagging class
+        tagging_klass = setup.tagging_class_name.constantize
+        existing_taggable = tagging_klass.reflect_on_association(:taggable)
+        if existing_taggable.nil? || existing_taggable.class_name == setup.taggable_klass.name
+          tagging_klass.class_eval do
+            belongs_to :tag,
+                       class_name: setup.tag_class_name,
+                       foreign_key: "tag_id"
 
-          # For local tags, we use a simple belongs_to without polymorphic
-          belongs_to :taggable,
-                     class_name: setup.taggable_klass.name,
-                     foreign_key: "taggable_id"
+            belongs_to :taggable,
+                       class_name: setup.taggable_klass.name,
+                       foreign_key: "taggable_id"
 
-          validates :tag, :taggable, :context, presence: true
-          validates :tag_id, uniqueness: {
-            scope: %i[taggable_id context],
-            message: "has already been tagged on this record in this context"
-          }
+            validates :tag, :taggable, :context, presence: true
+            validates :tag_id, uniqueness: {
+              scope: %i[taggable_id context],
+              message: "has already been tagged on this record in this context"
+            }
+          end
         end
       end
 
@@ -238,11 +241,7 @@ module NoFlyList
         # Define helper methods module for this context
         helper_module = Module.new do
           define_method :create_and_set_proxy do |instance_variable_name, setup|
-            tag_model = if setup.polymorphic
-                          setup.tag_class_name.constantize
-            else
-                          self.class.const_get("#{self.class.name}Tag")
-            end
+            tag_model = setup.tag_class_name.constantize
 
             proxy = TaggingProxy.new(
               self,

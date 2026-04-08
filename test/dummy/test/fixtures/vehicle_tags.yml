@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: vehicle_tags
+#
+#  id   :bigint           not null, primary key
+#  name :string(255)      not null
+#
+lightweight:
+  name: lightweight
+
+electric:
+  name: electric
+
+off_road:
+  name: off-road
+
+v_twin:
+  name: v-twin
+
+inline_four:
+  name: inline-four
+
+carbon_fiber:
+  name: carbon fiber

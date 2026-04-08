@@ -211,6 +211,30 @@ end
 article.topics_list = "Rails | API"  # Stored as ["rails", "api"]
 ```
 
+### Single Table Inheritance (STI)
+
+For STI models, subclasses must explicitly specify the parent's tag and tagging classes:
+
+```ruby
+class Vehicle < ApplicationRecord
+  include NoFlyList::TaggableRecord
+
+  has_tags :features
+end
+
+class Bicycle < Vehicle
+  has_tags :terrain_types, tag_class_name: "VehicleTag", tagging_class_name: "Vehicle::Tagging"
+end
+
+class Motorcycle < Vehicle
+  has_tags :engine_types, tag_class_name: "VehicleTag", tagging_class_name: "Vehicle::Tagging"
+end
+```
+
+All subclasses share the same `vehicle_tags` and `vehicle_taggings` tables.
+
+Due to the metaprogramming nature of `has_tags` and the wide range of Rails versions supported (7.2 through 8.2+), automatic STI detection is intentionally avoided. Explicit `tag_class_name` and `tagging_class_name` options on subclasses keep the configuration predictable across Rails upgrades — your STI setup will work the same way on Rails 7.2 as it does on 8.2, with no hidden behavior changes. Without these options, the library would generate non-existent classes like `BicycleTag` and `Bicycle::Tagging`.
+
 ## Testing Support
 
 The gem includes test helpers:
