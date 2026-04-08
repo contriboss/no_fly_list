@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 17) do
+ActiveRecord::Schema[8.0].define(version: 18) do
   create_table "application_taggings", force: :cascade do |t|
     t.bigint "tag_id", null: false
     t.string "taggable_type", null: false
@@ -131,6 +131,28 @@ ActiveRecord::Schema[7.2].define(version: 17) do
     t.string "name", null: false
   end
 
+  create_table "vehicle_taggings", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
+    t.string "context", null: false
+    t.index ["tag_id"], name: "index_vehicle_taggings_on_tag_id"
+    t.index ["taggable_id", "tag_id"], name: "index_vehicle_taggings_on_taggable_id_and_tag_id", unique: true
+    t.index ["taggable_id"], name: "index_vehicle_taggings_on_taggable_id"
+  end
+
+  create_table "vehicle_tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.index ["name"], name: "index_vehicle_tags_on_name", unique: true
+  end
+
+  create_table "vehicles", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "name"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "application_taggings", "application_tags", column: "tag_id"
   add_foreign_key "company_taggings", "companies", column: "taggable_id"
   add_foreign_key "company_taggings", "company_tags", column: "tag_id"
@@ -140,4 +162,6 @@ ActiveRecord::Schema[7.2].define(version: 17) do
   add_foreign_key "passenger_taggings", "passengers", column: "taggable_id"
   add_foreign_key "person_taggings", "people", column: "taggable_id"
   add_foreign_key "person_taggings", "person_tags", column: "tag_id"
+  add_foreign_key "vehicle_taggings", "vehicle_tags", column: "tag_id"
+  add_foreign_key "vehicle_taggings", "vehicles", column: "taggable_id"
 end

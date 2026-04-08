@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: vehicles
+#
+#  id         :bigint           not null, primary key
+#  type       :string(255)      not null
+#  name       :string(255)
+#  year       :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+road_bike:
+  type: Bicycle
+  name: Road Master
+  year: 2024
+
+mountain_bike:
+  type: Bicycle
+  name: Trail Blazer
+  year: 2023
+
+harley:
+  type: Motorcycle
+  name: Street Glide
+  year: 2024
+
+ducati:
+  type: Motorcycle
+  name: Panigale V4
+  year: 2025
