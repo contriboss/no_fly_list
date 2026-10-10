@@ -1,7 +1,13 @@
 class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version %>
   def up
     create_table :application_tags do |t|
+<% if scope_column -%>
+      t.column :<%= scope_column %>, :bigint, null: false # Change to :uuid if you are using UUIDs
+      t.string :name, null: false
+      t.index %i[<%= scope_column %> name], unique: true
+<% else -%>
       t.string :name, null: false, index: { unique: true }
+<% end -%>
       t.timestamp :created_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
       t.timestamp :updated_at, default: -> { 'CURRENT_TIMESTAMP' }, null: false
     end

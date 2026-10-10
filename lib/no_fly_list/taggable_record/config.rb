@@ -14,6 +14,7 @@ module NoFlyList
       context = context.to_sym
       tag_class_name = determine_tag_class_name(options)
       tagging_class_name = determine_tagging_class_name(options)
+      ensure_consistent_scope(context, tag_class_name, options[:scope])
 
       @tag_contexts[context] = {
         taggable_class: @taggable_class.to_s,
@@ -25,11 +26,24 @@ module NoFlyList
         limit: options.fetch(:limit, nil),
         case_sensitive: options.fetch(:case_sensitive, true),
         adapter: @adapter,
-        counter_cache: options.fetch(:counter_cache, false)
+        counter_cache: options.fetch(:counter_cache, false),
+        scope: options[:scope]
       }
     end
 
     private
+
+    # Contexts that share a tag table must agree on its scope, otherwise an
+    # unscoped context would match tags across scopes.
+    def ensure_consistent_scope(context, tag_class_name, scope)
+      other = @tag_contexts.find do |name, config|
+        name != context && config[:tag_class_name] == tag_class_name && config[:scope] != scope
+      end
+      return unless other
+
+      raise ArgumentError, "NoFlyList: #{@taggable_class}##{context} uses scope #{scope.inspect} but " \
+                           "#{other.first} uses scope #{other.last[:scope].inspect} on the same tag class #{tag_class_name}"
+    end
 
     def determine_adapter
       case taggable_class.connection.adapter_name.downcase

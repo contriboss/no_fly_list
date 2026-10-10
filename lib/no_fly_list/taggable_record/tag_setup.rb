@@ -34,6 +34,12 @@ module NoFlyList
       # @return [Symbol] Database adapter type (:postgresql, :mysql, :sqlite)
       attr_reader :adapter
 
+      # @return [Symbol, nil] belongs_to association (or column) that partitions tags
+      attr_reader :scope
+
+      # @return [Boolean] Whether tag names are compared case sensitively
+      attr_reader :case_sensitive
+
       # Creates new tag setup configuration
       # @param taggable_klass [Class] Model to configure
       # @param context [Symbol] Tag context name
@@ -50,6 +56,26 @@ module NoFlyList
         @tag_class_name = determine_tag_class_name(taggable_klass, options)
         @tagging_class_name = determine_tagging_class_name(taggable_klass, options)
         @adapter = determine_adapter
+        @scope = options[:scope]
+        @case_sensitive = options.fetch(:case_sensitive, true)
+      end
+
+      # Column shared by the taggable and tag tables that keeps tags unique per
+      # scope: the foreign key of the +scope+ association, or +scope+ itself
+      # when no such association exists. Resolved on first use so +has_tags+
+      # may be declared before the association.
+      # @return [String, nil] Scope column name, or nil for unscoped tags
+      def scope_column
+        return unless scope
+
+        @scope_column ||= begin
+          reflection = taggable_klass.reflect_on_association(scope)
+          if reflection&.polymorphic?
+            raise ArgumentError, "NoFlyList: scope #{scope.inspect} on #{taggable_klass.name} is a polymorphic association, which is not supported"
+          end
+
+          reflection ? reflection.foreign_key.to_s : scope.to_s
+        end
       end
 
       private

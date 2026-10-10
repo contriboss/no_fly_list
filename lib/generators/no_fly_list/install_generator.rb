@@ -14,6 +14,8 @@ module NoFlyList
       source_root File.expand_path("templates", __dir__)
 
       argument :connection_name, type: :string, desc: "The name of the database connection", default: "primary"
+      class_option :scope, type: :string,
+                           desc: "belongs_to association (e.g. entity) that keeps tags unique per scope"
 
       def copy_application_tag
         ensure_connection_exists
@@ -43,6 +45,15 @@ module NoFlyList
           klass.abstract_class? && klass.connection_db_config.name == connection_name
         end
         klass&.name || "ApplicationRecord"
+      end
+
+      # Column added to the tag table for --scope=NAME: NAME_id, or NAME when
+      # it already ends in _id.
+      def scope_column
+        scope = options[:scope]
+        return if scope.blank?
+
+        scope.end_with?("_id") ? scope : "#{scope}_id"
       end
 
       def migration_version
