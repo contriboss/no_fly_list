@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.8.0](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.4...no_fly_list/v0.8.0) (2026-10-19)
+
+
+### Features
+
+* drop Ruby &lt;4.0 and Rails &lt;8.1, switch test runner to padded_cell ([8e751c1](https://github.com/contriboss/no_fly_list/commit/8e751c16bdb7428014568599ccec52aa2877b76d))
+* scope tags per tenant and honour case_sensitive: false ([#1](https://github.com/contriboss/no_fly_list/issues/1)) ([#27](https://github.com/contriboss/no_fly_list/issues/27)) ([0cd281a](https://github.com/contriboss/no_fly_list/commit/0cd281ac32d1e1c58b3ff9a3a26a8fc18f266e45))
+
 ## [0.7.4](https://github.com/contriboss/no_fly_list/compare/no_fly_list/v0.7.3...no_fly_list/v0.7.4) (2026-04-08)
 
 
