@@ -16,4 +16,5 @@ class Company < ApplicationRecord
   include NoFlyList::TaggableRecord
 
   has_tags :industries, transformer: "CompanyTagTransformer"
+  has_tags :keywords, case_sensitive: false
 end

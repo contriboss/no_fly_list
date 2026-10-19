@@ -211,6 +211,37 @@ class Passenger < ApplicationRecord
 end
 ```
 
+## Scoped Tags
+
+Either strategy can keep tags unique per tenant instead of per table. Pass
+`scope:` with a `belongs_to` association and add its foreign key to the tag
+table:
+
+```ruby
+class Lead < ApplicationRecord
+  include NoFlyList::TaggableRecord
+
+  belongs_to :entity
+  has_tags :tags, scope: :entity
+end
+```
+
+```sql
+CREATE TABLE lead_tags (
+  id bigint NOT NULL,
+  entity_id bigint NOT NULL,
+  name string NOT NULL,
+  created_at datetime NOT NULL,
+  updated_at datetime NOT NULL
+);
+
+CREATE UNIQUE INDEX index_lead_tags_on_entity_id_and_name ON lead_tags (entity_id, name);
+```
+
+With model-specific tags the scope only concerns one model's tag table. With
+shared polymorphic tags the scope column covers the whole shared table, so
+every model tagging through it should declare the same scope.
+
 ## Performance Considerations
 
 ### Query Complexity
@@ -220,6 +251,7 @@ end
 ### Indexing Strategy
 - Shared tags: Index on (taggable_type, taggable_id, context)
 - Model-specific tags: Simple indexes on foreign keys
+- Scoped tags: Unique index on (scope column, name), which also serves lookups by scope
 
 ### Cache Efficiency
 - Shared tags: Cached queries can benefit multiple models

@@ -249,7 +249,8 @@ module NoFlyList
               setup.context,
               transformer: setup.transformer,
               restrict_to_existing: setup.restrict_to_existing,
-              limit: calculate_limit(setup.limit)
+              limit: calculate_limit(setup.limit),
+              scope_column: setup.scope_column
             )
             instance_variable_set(instance_variable_name, proxy)
           end

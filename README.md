@@ -19,6 +19,7 @@ Focused on simplicity and modern Rails patterns.
 - **Polymorphic or Model-Specific Tags**: Choose between shared tags across models or model-specific tags
 - **Tag Restrictions**: Optional limiting of allowed tags and maximum tag count
 - **Custom Class Names**: Override tag and tagging class names per model
+- **Scoped Tags**: Keep a separate set of tags per tenant, account or workspace
 - **Database Agnostic**: Native support for PostgreSQL, MySQL and SQLite with optimized queries
 - **Multiple Tag Input Formats**: Support for arrays, strings, and comma-separated values
 - **Counter Cache**: Optional counter cache for tag counts
@@ -168,6 +169,64 @@ Article.with_any_topics("rails")
       .with_all_categories("tutorial")
 ```
 
+### Scoped tags (multi-tenancy)
+
+Tag names are unique across the whole tag table by default, so every record
+tagged "VIP" shares one tag. Pass `scope:` to give each tenant its own tags:
+
+```ruby
+class Lead < ApplicationRecord
+  include NoFlyList::TaggableRecord
+
+  belongs_to :entity
+  has_tags :tags, scope: :entity
+end
+```
+
+Generate the tag tables with the scope column:
+
+```bash
+$ rails generate no_fly_list:tagging Lead --scope=entity
+```
+
+The tag table gets an `entity_id` column, and names are unique per entity:
+
+```ruby
+create_table :lead_tags, id: :bigint do |t|
+  t.column :entity_id, :bigint, null: false
+  t.string :name, null: false
+  # timestamps...
+end
+
+add_index :lead_tags, %i[entity_id name], unique: true
+```
+
+How scoped tags behave:
+
+- `scope:` names a `belongs_to` association. Its foreign key is the scope
+  column, and the tag table needs a column with the same name. A column name
+  (`scope: :entity_id`) works too. Polymorphic `belongs_to` associations are
+  not supported.
+- Tags are found and created by name within the record's scope. Two entities
+  using "VIP" get separate tags, and renaming one leaves the other alone.
+- `restrict_to_existing` only accepts tags that exist in the record's scope.
+- The query scopes (`with_any_tags`, `with_all_tags`, `with_exact_tags`,
+  `without_any_tags`, `without_tags`) only count tags in each record's own
+  scope. Add your own condition to search one tenant:
+  `Lead.where(entity: entity).with_any_tags("VIP")`.
+- Contexts that share a tag class must use the same scope. Declaring them with
+  different scopes raises `ArgumentError`.
+- A tag keeps the scope it was created in. When a record moves to another
+  scope, its old tags stop matching queries until its tag list is saved again.
+- List a scope's tags through the tag model: `LeadTag.where(entity_id: entity.id)`.
+
+Global tags take the same option. Generate the global table with
+`rails generate no_fly_list:install --scope=entity` and declare
+`has_tags :labels, polymorphic: true, scope: :entity`. The scope column covers
+the whole global table, so give every polymorphic context the same scope: an
+unscoped context looks tags up by name alone and can pick up a tag from any
+scope.
+
 ### Configuration Options
 
 | Option | Default | Description |
@@ -176,7 +235,8 @@ Article.with_any_topics("rails")
 | `restrict_to_existing` | `false` | Only allow existing tags |
 | `limit` | `nil` | Maximum tags per record |
 | `counter_cache` | `false` | Enable counter cache column |
-| `case_sensitive` | `true` | Case sensitive tag matching |
+| `case_sensitive` | `true` | Match names case sensitively when finding tags, checking `restrict_to_existing` and in the query scopes |
+| `scope` | `nil` | `belongs_to` association (or column) that keeps tags unique per scope |
 | `transformer` | `'ApplicationTagTransformer'` | Custom tag parsing |
 | `tag_class_name` | `ModelTag` | Custom tag class name |
 | `tagging_class_name` | `Model::Tagging` | Custom tagging class name |

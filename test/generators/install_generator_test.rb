@@ -40,6 +40,25 @@ class NoFlyList::Generators::InstallGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  test "generates a unique name index without a scope" do
+    run_generator
+
+    assert_migration "db/migrate/create_application_tagging_table.rb" do |content|
+      assert_match(/t\.string :name, null: false, index: \{ unique: true \}/, content)
+      assert_no_match(/t\.column :\w+_id/, content)
+    end
+  end
+
+  test "generates a scope column and a per-scope name index with --scope" do
+    run_generator [ "--scope=entity" ]
+
+    assert_migration "db/migrate/create_application_tagging_table.rb" do |content|
+      assert_match(/t\.column :entity_id, :bigint, null: false/, content)
+      assert_match(/t\.string :name, null: false\n/, content)
+      assert_match(/t\.index %i\[entity_id name\], unique: true/, content)
+    end
+  end
+
   test "generates with custom connection name" do
     run_generator [ "secondary" ]
 
@@ -53,6 +72,7 @@ class NoFlyList::Generators::InstallGeneratorTest < Rails::Generators::TestCase
 
   def prepare_destination
     destination_root = Rails.root.join("tmp/generators")
+    FileUtils.rm_rf(destination_root)
     FileUtils.mkdir_p(destination_root)
     FileUtils.mkdir_p(File.join(destination_root, "app/models"))
     FileUtils.mkdir_p(File.join(destination_root, "db/migrate"))

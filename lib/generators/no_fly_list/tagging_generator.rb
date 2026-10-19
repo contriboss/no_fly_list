@@ -13,6 +13,8 @@ module NoFlyList
 
       class_option :database, type: :string, default: "primary",
                               desc: "Use different database for migration"
+      class_option :scope, type: :string,
+                           desc: "belongs_to association (e.g. entity) that keeps tags unique per scope"
 
       def self.default_generator_root
         File.dirname(__FILE__)
@@ -58,6 +60,18 @@ module NoFlyList
 
       def tagging_table_name
         "#{model_table_name.singularize}_taggings"
+      end
+
+      # Column added to the tag table for --scope=NAME: the foreign key of the
+      # model's NAME association, else NAME_id, or NAME when it ends in _id.
+      def scope_column
+        scope = options[:scope]
+        return if scope.blank?
+
+        reflection = target_class.reflect_on_association(scope)
+        return reflection.foreign_key.to_s if reflection
+
+        scope.end_with?("_id") ? scope : "#{scope}_id"
       end
 
       def migration_version

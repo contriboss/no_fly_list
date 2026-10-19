@@ -67,6 +67,15 @@ class PassengerTest < ActiveSupport::TestCase
       assert_equal [ @john ], result.to_a
     end
 
+    test "without_any_meal_preferences excludes passengers with any specified diet" do
+      result = Passenger.without_any_meal_preferences(%w[vegan halal])
+
+      assert_not_includes result, @john
+      assert_not_includes result, @xenu
+      assert_includes result, @jane
+      assert_includes result, passengers(:olga_ivanova)
+    end
+
     test "querying with empty tag arrays" do
       assert_empty Passenger.with_all_meal_preferences([])
       assert_empty Passenger.with_any_meal_preferences([])
