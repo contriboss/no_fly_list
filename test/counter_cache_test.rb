@@ -3,7 +3,7 @@
 require "test_helper"
 
 class CounterCacheTest < ActiveSupport::TestCase
-  fixtures :passengers
+  fixtures :passengers, :passenger_tags
   include NoFlyList::TestHelper
 
   def test_multiple_counters_increment

@@ -6,6 +6,8 @@
 /tmp/
 /test/dummy/log/*
 /test/dummy/db/*.sqlite3
+/test/dummy/db/*.sqlite3-*
+/test/dummy/db/*.sqlite3_*
 /test/dummy/tmp/
 /.idea/
 Gemfile.lock

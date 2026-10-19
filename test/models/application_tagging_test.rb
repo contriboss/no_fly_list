@@ -3,6 +3,11 @@
 require "test_helper"
 
 class ApplicationTaggingTest < ActiveSupport::TestCase
-  should belong_to(:tag)
-  should belong_to(:taggable)
+  test "belongs to tag" do
+    assert belong_to(:tag).matches?(ApplicationTagging.new)
+  end
+
+  test "belongs to taggable" do
+    assert belong_to(:taggable).matches?(ApplicationTagging.new)
+  end
 end

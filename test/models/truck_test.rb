@@ -9,11 +9,21 @@ class TruckTest < ActiveSupport::TestCase
     assert_taggable_record(Truck, :cargo_types, :route_tags)
   end
 
-  should have_many(:cargo_type_taggings)
-  should have_many(:cargo_types).through(:cargo_type_taggings)
+  test "has many cargo_type_taggings" do
+    assert have_many(:cargo_type_taggings).matches?(Truck.new)
+  end
 
-  should have_many(:route_tag_taggings)
-  should have_many(:route_tags).through(:route_tag_taggings)
+  test "has many cargo_types through cargo_type_taggings" do
+    assert have_many(:cargo_types).through(:cargo_type_taggings).matches?(Truck.new)
+  end
+
+  test "has many route_tag_taggings" do
+    assert have_many(:route_tag_taggings).matches?(Truck.new)
+  end
+
+  test "has many route_tags through route_tag_taggings" do
+    assert have_many(:route_tags).through(:route_tag_taggings).matches?(Truck.new)
+  end
 
   test "manage cargo and route tags" do
     truck = trucks(:big_hauler)

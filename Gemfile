@@ -6,7 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "pg"
-rails_version = ENV.fetch("RAILS_VERSION", "~> 8.0")
+rails_version = ENV.fetch("RAILS_VERSION", "~> 8.1")
 gem "mysql2"
 if rails_version == "edge"
   gem "railties", github: "rails/rails", branch: "main"
@@ -14,10 +14,12 @@ if rails_version == "edge"
 else
   gem "railties", rails_version
 end
-# shoulda-context has compatibility issues with Rails 8.1+
-gem "shoulda-context", "~> 2.0" unless rails_version.match?(/8\.[12]|edge/)
 gem "shoulda-matchers"
-gem "minitest", "~> 5.0"
+gem "minitest", "~> 6.0"
 gem "sqlite3"
 gem "simplecov", require: false
 gem "rubocop-rails-omakase"
+
+group :test do
+  gem "padded_cell"
+end

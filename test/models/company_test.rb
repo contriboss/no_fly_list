@@ -6,8 +6,13 @@ class CompanyTest < ActiveSupport::TestCase
   include NoFlyList::TestHelper
   fixtures :companies
   # Test associations for industries
-  should have_many(:industry_taggings)
-  should have_many(:industries).through(:industry_taggings)
+  test "has many industry_taggings" do
+    assert have_many(:industry_taggings).matches?(Company.new)
+  end
+
+  test "has many industries through industry_taggings" do
+    assert have_many(:industries).through(:industry_taggings).matches?(Company.new)
+  end
 
   test "assert_taggable_record" do
     assert_taggable_record(Company, :industries)

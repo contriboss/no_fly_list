@@ -6,8 +6,13 @@ class BusTest < ActiveSupport::TestCase
   include NoFlyList::TestHelper
   fixtures :buses
   # Test associations for colors
-  should have_many(:color_taggings)
-  should have_many(:colors).through(:color_taggings)
+  test "has many color_taggings" do
+    assert have_many(:color_taggings).matches?(Bus.new)
+  end
+
+  test "has many colors through color_taggings" do
+    assert have_many(:colors).through(:color_taggings).matches?(Bus.new)
+  end
 
   test "assert_taggable_record" do
     assert_taggable_record(Bus, :colors)

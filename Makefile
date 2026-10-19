@@ -21,7 +21,7 @@ test_all:
 			failed_adapters="$$failed_adapters $$adapter"; \
 			continue; \
 		fi; \
-		if ! DB_ADAPTER=$$adapter RAILS_ENV=test bin/rails test; then \
+		if ! DB_ADAPTER=$$adapter RAILS_ENV=test RUBYLIB=test/dummy/test bin/rails app:padded_cell ARGS="--isolation worker"; then \
 			failed_adapters="$$failed_adapters $$adapter"; \
 		fi; \
 	done; \
@@ -34,14 +34,14 @@ test_all:
 test_p:
 	@echo "Testing with postgresql..."; \
 	DB_ADAPTER=postgresql RAILS_ENV=test bin/rails db:drop db:create db:migrate; \
-	DB_ADAPTER=postgresql RAILS_ENV=test bin/rails test;
+	DB_ADAPTER=postgresql RAILS_ENV=test RUBYLIB=test/dummy/test bin/rails app:padded_cell ARGS="--isolation worker";
 
 test_m:
 	@echo "Testing with mysql..."; \
 	DB_ADAPTER=mysql RAILS_ENV=test bin/rails db:drop db:create db:migrate; \
-	DB_ADAPTER=mysql RAILS_ENV=test bin/rails test;
+	DB_ADAPTER=mysql RAILS_ENV=test RUBYLIB=test/dummy/test bin/rails app:padded_cell ARGS="--isolation worker";
 
 test_s:
 	@echo "Testing with sqlite..."; \
 	DB_ADAPTER=sqlite RAILS_ENV=test bin/rails db:drop db:create db:migrate; \
-	DB_ADAPTER=sqlite RAILS_ENV=test bin/rails test;
+	DB_ADAPTER=sqlite RAILS_ENV=test RUBYLIB=test/dummy/test bin/rails app:padded_cell ARGS="--isolation worker";

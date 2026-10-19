@@ -62,15 +62,17 @@ class NoFlyList::Generators::TaggingGeneratorTest < Rails::Generators::TestCase
   end
 
   test "fails for non-existent model" do
-    assert_raises(ArgumentError, /Model 'NonExistentModel' does not exist/) do
+    error = assert_raises(ArgumentError) do
       run_generator [ "NonExistentModel" ]
     end
+    assert_match(/Model 'NonExistentModel' does not exist/, error.message)
   end
 
   private
 
   def prepare_destination
-    destination_root = Rails.root.join("tmp/generators")
+    # Unique per worker process so parallel test runs don't race on shared files.
+    self.destination_root = Rails.root.join("tmp/generators", "pid-#{Process.pid}")
     FileUtils.rm_rf(destination_root)
     FileUtils.mkdir_p(destination_root)
     FileUtils.mkdir_p(File.join(destination_root, "db/migrate"))

@@ -3,18 +3,18 @@
 [![Gem Version](https://badge.fury.io/rb/no_fly_list.svg)](https://badge.fury.io/rb/no_fly_list)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
 
-A modern, modular tagging system built specifically for Rails 7.2+ applications. 
+A modern, modular tagging system built specifically for Rails 8.1+ applications. 
 Focused on simplicity and modern Rails patterns.
 
 ## Requirements
 
-- Rails 7.2 or higher
-- Ruby 3.2 or higher
+- Rails 8.1 or higher
+- Ruby 4.0 or higher
 - PostgreSQL, MySQL, or SQLite3
 
 ## Features
 
-- **Modern Rails First**: Built specifically for Rails 7.2+, leveraging the latest Active Record features
+- **Modern Rails First**: Built specifically for Rails 8.1+, leveraging the latest Active Record features
 - **Flexible Tag Contexts**: Define multiple tag categories per model
 - **Polymorphic or Model-Specific Tags**: Choose between shared tags across models or model-specific tags
 - **Tag Restrictions**: Optional limiting of allowed tags and maximum tag count
@@ -293,7 +293,7 @@ end
 
 All subclasses share the same `vehicle_tags` and `vehicle_taggings` tables.
 
-Due to the metaprogramming nature of `has_tags` and the wide range of Rails versions supported (7.2 through 8.2+), automatic STI detection is intentionally avoided. Explicit `tag_class_name` and `tagging_class_name` options on subclasses keep the configuration predictable across Rails upgrades — your STI setup will work the same way on Rails 7.2 as it does on 8.2, with no hidden behavior changes. Without these options, the library would generate non-existent classes like `BicycleTag` and `Bicycle::Tagging`.
+Due to the metaprogramming nature of `has_tags`, automatic STI detection is intentionally avoided. Explicit `tag_class_name` and `tagging_class_name` options on subclasses keep the configuration predictable across Rails upgrades — your STI setup will work the same way on Rails 8.1 as it does on later releases, with no hidden behavior changes. Without these options, the library would generate non-existent classes like `BicycleTag` and `Bicycle::Tagging`.
 
 ## Testing Support
 
@@ -321,7 +321,7 @@ end
 5. Push to the branch (`git push origin feature/my-new-feature`)
 6. Create new Pull Request
 
-Please note that we only support Rails 7.2+ for new features. Bug fixes may be considered for earlier versions depending on severity.
+Please note that we only support Rails 8.1+ for new features. Bug fixes may be considered for earlier versions depending on severity.
 
 ## License
 

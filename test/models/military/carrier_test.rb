@@ -16,14 +16,29 @@ module Military
       assert_taggable_record(Carrier, :mission_types, :capabilities, :notable_features)
     end
 
-    should have_many(:mission_type_taggings)
-    should have_many(:mission_types).through(:mission_type_taggings)
+    test "has many mission_type_taggings" do
+      assert have_many(:mission_type_taggings).matches?(Carrier.new)
+    end
 
-    should have_many(:capability_taggings)
-    should have_many(:capabilities).through(:capability_taggings)
+    test "has many mission_types through mission_type_taggings" do
+      assert have_many(:mission_types).through(:mission_type_taggings).matches?(Carrier.new)
+    end
 
-    should have_many(:notable_feature_taggings)
-    should have_many(:notable_features).through(:notable_feature_taggings)
+    test "has many capability_taggings" do
+      assert have_many(:capability_taggings).matches?(Carrier.new)
+    end
+
+    test "has many capabilities through capability_taggings" do
+      assert have_many(:capabilities).through(:capability_taggings).matches?(Carrier.new)
+    end
+
+    test "has many notable_feature_taggings" do
+      assert have_many(:notable_feature_taggings).matches?(Carrier.new)
+    end
+
+    test "has many notable_features through notable_feature_taggings" do
+      assert have_many(:notable_features).through(:notable_feature_taggings).matches?(Carrier.new)
+    end
 
     test "add and retrieve tags" do
       # Add tags to the USS Enterprise (loaded from fixtures)

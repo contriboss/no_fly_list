@@ -10,19 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 21) do
+ActiveRecord::Schema[8.1].define(version: 21) do
   create_table "airlines", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "application_taggings", force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.string "taggable_type", null: false
-    t.bigint "taggable_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
+    t.string "taggable_type", null: false
     t.datetime "updated_at", null: false
     t.index ["context"], name: "index_application_taggings_on_context"
     t.index ["tag_id"], name: "index_application_taggings_on_tag_id"
@@ -31,27 +31,27 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "application_tags", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.bigint "airline_id"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
     t.index ["airline_id", "name"], name: "index_application_tags_on_airline_id_and_name", unique: true
   end
 
   create_table "companies", force: :cascade do |t|
-    t.string "name"
-    t.string "industry"
-    t.integer "founded_year"
     t.string "ceo_name"
     t.datetime "created_at", null: false
+    t.integer "founded_year"
+    t.string "industry"
+    t.string "name"
     t.datetime "updated_at", null: false
   end
 
   create_table "company_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_company_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_company_taggings_on_taggable_id_and_tag_id", unique: true
@@ -59,17 +59,17 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "company_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_company_tags_on_name", unique: true
   end
 
   create_table "crew_member_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_crew_member_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_crew_member_taggings_on_taggable_id_and_tag_id", unique: true
@@ -78,24 +78,24 @@ ActiveRecord::Schema[8.0].define(version: 21) do
 
   create_table "crew_member_tags", force: :cascade do |t|
     t.bigint "airline_id", null: false
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["airline_id", "name"], name: "index_crew_member_tags_on_airline_id_and_name", unique: true
   end
 
   create_table "crew_members", force: :cascade do |t|
     t.bigint "airline_id", null: false
-    t.string "name"
     t.datetime "created_at", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
     t.index ["airline_id"], name: "index_crew_members_on_airline_id"
   end
 
   create_table "military_carrier_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.index ["tag_id"], name: "index_military_carrier_taggings_on_tag_id"
     t.index ["taggable_id"], name: "index_military_carrier_taggings_on_taggable_id"
   end
@@ -105,18 +105,18 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "military_carriers", force: :cascade do |t|
-    t.string "name"
-    t.string "model"
     t.integer "capacity"
     t.datetime "created_at", null: false
+    t.string "model"
+    t.string "name"
     t.datetime "updated_at", null: false
   end
 
   create_table "passenger_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_passenger_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_passenger_taggings_on_taggable_id_and_tag_id", unique: true
@@ -124,39 +124,39 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "passenger_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_passenger_tags_on_name", unique: true
   end
 
   create_table "passengers", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "passport_number"
-    t.string "nationality"
-    t.string "religion", default: "scientology"
-    t.string "gender", default: "not_sure"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "special_needs_count", default: 0, null: false
     t.integer "dietary_requirements_count", default: 0, null: false
+    t.string "first_name"
+    t.string "gender", default: "not_sure"
+    t.string "last_name"
+    t.string "nationality"
+    t.string "passport_number"
+    t.string "religion", default: "scientology"
+    t.integer "special_needs_count", default: 0, null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "people", force: :cascade do |t|
+    t.text "address"
+    t.date "birthdate"
+    t.datetime "created_at", null: false
+    t.string "email"
     t.string "first_name"
     t.string "last_name"
-    t.date "birthdate"
-    t.string "email"
-    t.text "address"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "person_taggings", force: :cascade do |t|
+    t.string "context", null: false
     t.bigint "tag_id", null: false
     t.bigint "taggable_id", null: false
-    t.string "context", null: false
     t.index ["tag_id"], name: "fk_rails_c226efc6c0"
     t.index ["taggable_id"], name: "fk_rails_2d0fa276dc"
   end
@@ -166,9 +166,9 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "vehicle_taggings", force: :cascade do |t|
+    t.string "context", null: false
     t.bigint "tag_id", null: false
     t.bigint "taggable_id", null: false
-    t.string "context", null: false
     t.index ["tag_id"], name: "index_vehicle_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_vehicle_taggings_on_taggable_id_and_tag_id", unique: true
     t.index ["taggable_id"], name: "index_vehicle_taggings_on_taggable_id"
@@ -180,11 +180,11 @@ ActiveRecord::Schema[8.0].define(version: 21) do
   end
 
   create_table "vehicles", force: :cascade do |t|
-    t.string "type", null: false
-    t.string "name"
-    t.integer "year"
     t.datetime "created_at", null: false
+    t.string "name"
+    t.string "type", null: false
     t.datetime "updated_at", null: false
+    t.integer "year"
   end
 
   add_foreign_key "application_taggings", "application_tags", column: "tag_id"

@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 27) do
+ActiveRecord::Schema[8.1].define(version: 27) do
   create_table "application_taggings", force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.string "taggable_type", null: false
-    t.bigint "taggable_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
+    t.string "taggable_type", null: false
     t.datetime "updated_at", null: false
     t.index ["context"], name: "index_application_taggings_on_context"
     t.index ["tag_id"], name: "index_application_taggings_on_tag_id"
@@ -25,17 +25,17 @@ ActiveRecord::Schema[7.2].define(version: 27) do
   end
 
   create_table "application_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_application_tags_on_name", unique: true
   end
 
   create_table "bus_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_bus_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_bus_taggings_on_taggable_id_and_tag_id", unique: true
@@ -43,26 +43,26 @@ ActiveRecord::Schema[7.2].define(version: 27) do
   end
 
   create_table "bus_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_bus_tags_on_name", unique: true
   end
 
   create_table "buses", force: :cascade do |t|
-    t.string "route_number"
+    t.boolean "accessible"
     t.integer "capacity"
     t.string "company"
-    t.boolean "accessible"
     t.datetime "created_at", null: false
+    t.string "route_number"
     t.datetime "updated_at", null: false
   end
 
   create_table "car_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_car_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_car_taggings_on_taggable_id_and_tag_id", unique: true
@@ -70,27 +70,27 @@ ActiveRecord::Schema[7.2].define(version: 27) do
   end
 
   create_table "car_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_car_tags_on_name", unique: true
   end
 
   create_table "cars", force: :cascade do |t|
+    t.string "color"
+    t.datetime "created_at", null: false
     t.string "make"
     t.string "model"
-    t.integer "year"
-    t.string "color"
     t.integer "price_cents"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "year"
   end
 
   create_table "truck_taggings", force: :cascade do |t|
-    t.bigint "taggable_id", null: false
-    t.bigint "tag_id", null: false
     t.string "context", null: false
     t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "taggable_id", null: false
     t.datetime "updated_at", null: false
     t.index ["tag_id"], name: "index_truck_taggings_on_tag_id"
     t.index ["taggable_id", "tag_id"], name: "index_truck_taggings_on_taggable_id_and_tag_id", unique: true
@@ -98,20 +98,20 @@ ActiveRecord::Schema[7.2].define(version: 27) do
   end
 
   create_table "truck_tags", force: :cascade do |t|
-    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_truck_tags_on_name", unique: true
   end
 
   create_table "trucks", force: :cascade do |t|
+    t.integer "capacity_tons"
+    t.datetime "created_at", null: false
+    t.string "driver_name"
     t.string "make"
     t.string "model"
-    t.integer "year"
-    t.integer "capacity_tons"
-    t.string "driver_name"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "year"
   end
 
   add_foreign_key "application_taggings", "application_tags", column: "tag_id"

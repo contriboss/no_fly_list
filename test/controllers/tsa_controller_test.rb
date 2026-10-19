@@ -4,7 +4,7 @@ require "test_helper"
 
 class TsaControllerTest < ActionDispatch::IntegrationTest
   # Using passengers fixture from the provided YAML
-  fixtures :passengers
+  fixtures :passengers, :passenger_tags
 
   test "index returns success and data contains expected passengers" do
     get tsa_index_path

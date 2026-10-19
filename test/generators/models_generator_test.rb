@@ -24,9 +24,10 @@ class NoFlyList::Generators::ModelsGeneratorTest < Rails::Generators::TestCase
   end
 
   test "fails for non-existent model" do
-    assert_raises(ArgumentError, /NonExistentModel is not a valid constant/) do
+    error = assert_raises(ArgumentError) do
       run_generator [ "NonExistentModel" ]
     end
+    assert_match(/NonExistentModel is not a valid constant/, error.message)
 
     assert_no_file "app/models/non_existent_model_tag.rb"
     assert_no_file "app/models/non_existent_model/tagging.rb"
@@ -36,9 +37,10 @@ class NoFlyList::Generators::ModelsGeneratorTest < Rails::Generators::TestCase
     # Mock a non-ActiveRecord class
     Object.const_set("TestClass", Class.new)
 
-    assert_raises(ArgumentError, /TestClass is not an ActiveRecord model/) do
+    error = assert_raises(ArgumentError) do
       run_generator [ "TestClass" ]
     end
+    assert_match(/TestClass is not an ActiveRecord model/, error.message)
 
     assert_no_file "app/models/test_class_tag.rb"
     assert_no_file "app/models/test_class/tagging.rb"
@@ -61,7 +63,9 @@ class NoFlyList::Generators::ModelsGeneratorTest < Rails::Generators::TestCase
   private
 
   def prepare_destination
-    destination_root = Rails.root.join("tmp/generators")
+    # Unique per worker process so parallel test runs don't race on shared files.
+    self.destination_root = Rails.root.join("tmp/generators", "pid-#{Process.pid}")
+    FileUtils.rm_rf(destination_root)
     FileUtils.mkdir_p(destination_root)
     FileUtils.mkdir_p(File.join(destination_root, "app/models"))
   end

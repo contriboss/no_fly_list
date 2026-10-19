@@ -7,10 +7,21 @@ class PassengerTest < ActiveSupport::TestCase
   include NoFlyList::TestHelper
 
   # Test associations
-  should have_many(:special_need_taggings)
-  should have_many(:special_needs).through(:special_need_taggings)
-  should have_many(:meal_preference_taggings)
-  should have_many(:meal_preferences).through(:meal_preference_taggings)
+  test "has many special_need_taggings" do
+    assert have_many(:special_need_taggings).matches?(Passenger.new)
+  end
+
+  test "has many special_needs through special_need_taggings" do
+    assert have_many(:special_needs).through(:special_need_taggings).matches?(Passenger.new)
+  end
+
+  test "has many meal_preference_taggings" do
+    assert have_many(:meal_preference_taggings).matches?(Passenger.new)
+  end
+
+  test "has many meal_preferences through meal_preference_taggings" do
+    assert have_many(:meal_preferences).through(:meal_preference_taggings).matches?(Passenger.new)
+  end
 
   test "assert_taggable_record" do
     assert_taggable_record(Passenger, :special_needs, :meal_preferences)

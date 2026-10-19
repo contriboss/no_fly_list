@@ -11,8 +11,13 @@ class PersonTest < ActiveSupport::TestCase
     assert_taggable_record(Person, :pronouns)
   end
 
-  should have_many(:pronoun_taggings)
-  should have_many(:pronouns).through(:pronoun_taggings)
+  test "has many pronoun_taggings" do
+    assert have_many(:pronoun_taggings).matches?(Person.new)
+  end
+
+  test "has many pronouns through pronoun_taggings" do
+    assert have_many(:pronouns).through(:pronoun_taggings).matches?(Person.new)
+  end
 
   test "pronoun addition validation" do
     person = people(:john_doe)
